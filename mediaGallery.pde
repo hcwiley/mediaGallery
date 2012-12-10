@@ -17,6 +17,7 @@ SimpleOpenNI  context;
 boolean       autoCalib=true;
 PVector leftHand = new PVector();
 PVector rightHand = new PVector();
+PVector torso = new PVector();
 
 // Font vars
 PFont fontA;
@@ -25,9 +26,11 @@ PFont fontA;
 UDP udp;
 String ip = "localhost";	// the remote IP address
 int port  = 7655;
+float lastHandsSend = 0;
 
 void setup()
 {
+  frameRate(15);
   context = new SimpleOpenNI(this);
    
   // enable depthMap generation 
@@ -39,7 +42,8 @@ void setup()
   }
   
   // enable skeleton generation for all joints
-  context.enableUser(SimpleOpenNI.SKEL_PROFILE_ALL);
+  context.enableUser(SimpleOpenNI.SKEL_PROFILE_UPPER);
+  context.setMirror(true);
  
   background(200,0,0);
 
@@ -76,18 +80,21 @@ void draw()
       int userId = userList[i];
       context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_LEFT_HAND, leftHand);
       context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_RIGHT_HAND, rightHand);
+      context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_TORSO, torso);
       context.convertRealWorldToProjective(leftHand,leftHand);
+      context.convertRealWorldToProjective(torso,torso);
       context.convertRealWorldToProjective(rightHand,rightHand);
-      stroke(0,0,255);
-      fill(0,0,255);
-      ellipse(leftHand.x, leftHand.y, 5, 5);
-      stroke(255,0,0);
-      fill(255,0,0);
-      ellipse(rightHand.x, rightHand.y, 5, 5);
-      text("left: (" + leftHand.x + ", " + leftHand.y + ", " + leftHand.z +")",
-        20, 20);
-      text("right: (" + rightHand.x + ", " + rightHand.y + ", " + rightHand.z +")",
-        20, 80);
+//      
+//      stroke(0,0,255);
+//      fill(0,0,255);
+//      ellipse(leftHand.x, leftHand.y, 5, 5);
+//      stroke(255,0,0);
+//      fill(255,0,0);
+//      ellipse(rightHand.x, rightHand.y, 5, 5);
+//      text("left: (" + leftHand.x + ", " + leftHand.y + ", " + leftHand.z +")",
+//        20, 20);
+//      text("right: (" + rightHand.x + ", " + rightHand.y + ", " + rightHand.z +")",
+//        20, 80);
       sendHands();
     }
   }    
@@ -95,17 +102,45 @@ void draw()
 
 // send the hand data over udp to the node server
 void sendHands(){
+  if(millis() - lastHandsSend > 10){
+    lastHandsSend = millis();
+    String msg = "{\"hands\":{";
+    msg += "\"left\":{";
+    msg += "\"x\": \""+leftHand.x+"\",";
+    msg += "\"y\": \""+leftHand.y+"\",";
+    msg += "\"z\": \""+leftHand.z+"\"},";
+    msg += "\"right\":{";
+    msg += "\"x\": \""+rightHand.x+"\",";
+    msg += "\"y\": \""+rightHand.y+"\",";
+    msg += "\"z\": \""+rightHand.z+"\"}},";
+    msg += "\"torso\":{";
+    msg += "\"x\": \""+torso.x+"\",";
+    msg += "\"y\": \""+torso.y+"\",";
+    msg += "\"z\": \""+torso.z+"\"}";
+    msg += "}";
+    
+    convertAndSend(msg);
+  }
+}
+
+void sendEvent(String event, String stat){
   String msg = "{";
-  msg += "\"left\":{";
-  msg += "\"x\": \""+leftHand.x+"\",";
-  msg += "\"y\": \""+leftHand.y+"\",";
-  msg += "\"z\": \""+leftHand.z+"\"},";
-  msg += "\"right\":{";
-  msg += "\"x\": \""+rightHand.x+"\",";
-  msg += "\"y\": \""+rightHand.y+"\",";
-  msg += "\"z\": \""+rightHand.z+"\"}";
-  msg += "}}\n";
-  udp.send( msg, ip, port );
+  msg += "\"" + event + "\":";
+  msg += "\"" + stat + "\"";
+  msg += "}";
+  convertAndSend(msg);
+  
+}
+
+void convertAndSend(String msg){
+  byte bmsg[] = new byte[msg.length()+10];
+  
+  for(int i = 0; i < msg.length(); i++){
+    bmsg[i] = byte(msg.charAt(i));
+  }
+  bmsg[bmsg.length - 1] = byte('\0');
+  
+  udp.send( bmsg, ip, port ); 
 }
 
 // -----------------------------------------------------------------
@@ -120,10 +155,12 @@ void onNewUser(int userId)
     context.requestCalibrationSkeleton(userId,true);
   else    
     context.startPoseDetection("Psi",userId);
+  sendEvent("user", "found");
 }
 
 void onLostUser(int userId)
 {
+  sendEvent("user", "lost");
   println("onLostUser - userId: " + userId);
 }
 
@@ -149,6 +186,7 @@ void onEndCalibration(int userId, boolean successfull)
   if (successfull) 
   { 
     println("  User calibrated !!!");
+    sendEvent("user", "calibrated");
     context.startTrackingSkeleton(userId); 
   } 
   else 
