@@ -1,0 +1,14 @@
+{
+  "name"      : "mediaGallery",
+  "version"   : "0.0.1",
+  "dependencies": {
+    "connect-assets"        : "2.2.1",
+    "cookie"                : "0.0.4",
+    "express"               : "2.5.9",
+    "express-resource"      : "0.2.4",
+    "jade"                  : "0.26.1",
+    "mongoose"              : "3.0.1",
+    "socket.io"             : "0.9.6",
+    "supervisor"            : "0.3.2"
+  }
+}
