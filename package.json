@@ -9,6 +9,9 @@
     "jade"                  : "0.26.1",
     "mongoose"              : "3.0.1",
     "socket.io"             : "0.9.6",
+    "socket.io-client"      : "*",
+    "osc.io"                : "0.0.2",
+    "twitter-bootstrap"     : "*",
     "supervisor"            : "0.3.2"
   }
 }

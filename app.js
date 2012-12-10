@@ -65,4 +65,6 @@ app.configure(function(){
 });
 
 // UI routes
-app.get('/', routes.index);
+app.get('/', function(req, res){
+  res.render('index.jade', {});
+});
