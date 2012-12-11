@@ -20,15 +20,16 @@ isGrabbing =  @a.isGrabbing
   lScale = data.torso.z - data.hands.left.z
   rScale = data.torso.z - data.hands.right.z
   maxScale = 70
-  lScale = map lScale, 0, 500, 5, maxScale 
-  rScale = map rScale, 0, 500, 5, maxScale 
-  if lScale > maxScale
+  pushed = 50
+  lScale = map lScale, 0, 600, 5, maxScale 
+  rScale = map rScale, 0, 600, 5, maxScale 
+  if lScale > pushed
     lScale = maxScale
     $("#left").push()
   else
     $("#left").reset()
   lScale = 5  if lScale < 5
-  if rScale > maxScale
+  if rScale > pushed
     rScale = maxScale
     $("#right").push()
   else
@@ -50,6 +51,7 @@ $.fn.handOver = ->
 
 $.fn.handLeave = ->
   $(@).removeClass "over"
+  $(@).removeClass "grabbed"
 
 $.fn.isHandOver =  (pos)  ->
   me = @
@@ -60,8 +62,9 @@ $.fn.isHandOver =  (pos)  ->
   myPos.bottom = myPos.top + $(me).height() 
   myPos.cenX = myPos.right -  $(me).width() / 2 
   myPos.cenY = myPos.bottom -  $(me).height() / 2 
-  if myPos.left < pos.x and myPos.right > pos.x
-    if myPos.top < pos.y and myPos.bottom > pos.y
+  buf = 10
+  if myPos.left < ( pos.x - buf ) and myPos.right > ( pos.x + buf )
+    if myPos.top < ( pos.y - buf ) and myPos.bottom > ( pos.y + buf)
       $(me).handOver()
       return true
   $(me).handLeave()

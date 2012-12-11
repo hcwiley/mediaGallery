@@ -10,6 +10,7 @@ block content
       top: 300px;
       -o-background-size: 100% 100%;
       -webkit-background-size: 100% 100%;
+      z-index: 10;
     }
     #left{
       /*background-color: #00f;*/
@@ -19,18 +20,25 @@ block content
       /*background-color: #f00;*/
       background-image: url('/img/hand-right.svg');
     }
-    .pushed{
-      background-color: #0c0;
-    }
-    .over{
-      background-color: #00c;
-    }
     .obj{
       position: fixed;
       top: 150px;
       left: 200px;
       width: 200px;
       height: 300px;
+      z-index: 1;
+      opacity: .7;
+    }
+    .obj img{
+      width: 100%;
+      height: auto;
+    }
+    .pushed{
+      background-color: #0c0;
+    }
+    .over{
+      z-index: 2;
+      opacity: 1;
     }
   h1= title
   h4 Current user status: <span id='status'>---</span>

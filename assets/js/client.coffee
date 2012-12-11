@@ -24,12 +24,14 @@ isGrabbing =  @a.isGrabbing = false
 
 $.fn.grabbed =  (pos)  ->
   me = @
+  $(me).addClass 'grabbed'
   other = {}
   if pos is a.leftHand
     other = a.rightHand
   else
     other = a.leftHand
   width = other.x - pos.x
+  width = 50 if width < 50
   $(me).width width
   $(me).height width * $(me).data "ratio" 
   x = pos.x - $(me).width() / 2
