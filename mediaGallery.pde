@@ -102,7 +102,7 @@ void draw()
 
 // send the hand data over udp to the node server
 void sendHands(){
-  if(millis() - lastHandsSend > 10){
+  if(millis() - lastHandsSend > 15){
     lastHandsSend = millis();
     String msg = "{\"hands\":{";
     msg += "\"left\":{";
