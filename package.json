@@ -3,7 +3,6 @@
   "version"   : "0.0.1",
   "dependencies": {
     "express"               : "3.0.3",
-    "connect"               : "*",
     "connect-assets"        : "2.2.1",
     "cookie"                : "0.0.4",
     "jade"                  : "*",

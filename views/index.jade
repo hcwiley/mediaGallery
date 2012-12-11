@@ -3,22 +3,37 @@ extends layout
 block content
   style
     .hand{
-      width: 10px;
-      height: 10px;
+      width: 20px;
+      height: 20px;
       position: fixed;
       left: 0px;
       top: 300px;
+      -o-background-size: 100% 100%;
+      -webkit-background-size: 100% 100%;
     }
     #left{
-      background-color: #00f;
+      /*background-color: #00f;*/
+      background-image: url('/img/hand-left.svg');
     }
     #right{
-      background-color: #f00;
+      /*background-color: #f00;*/
+      background-image: url('/img/hand-right.svg');
     }
-
+    .pushed{
+      background-color: #0c0;
+    }
+    .over{
+      background-color: #00c;
+    }
   h1= title
-  p Let's get coding.
+  h4 Current user status: <span id='status'>---</span>
 
   #play
     #left.hand
     #right.hand
+
+  #gallery
+    for obj in objects
+      .grabbable.span2.offset1
+        img(src='/img/gallery/#{obj}.jpg')
+        h5=obj

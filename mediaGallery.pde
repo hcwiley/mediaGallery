@@ -17,6 +17,8 @@ SimpleOpenNI  context;
 boolean       autoCalib=true;
 PVector leftHand = new PVector();
 PVector rightHand = new PVector();
+PMatrix3D leftHandO = new PMatrix3D();
+PMatrix3D rightHandO = new PMatrix3D();
 PVector torso = new PVector();
 
 // Font vars
@@ -80,17 +82,24 @@ void draw()
       int userId = userList[i];
       context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_LEFT_HAND, leftHand);
       context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_RIGHT_HAND, rightHand);
+//      context.getJointOrientationSkeleton(userId, SimpleOpenNI.SKEL_LEFT_ELBOW, leftHandO);
+//      context.getJointOrientationSkeleton(userId, SimpleOpenNI.SKEL_RIGHT_ELBOW, rightHandO);
       context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_TORSO, torso);
       context.convertRealWorldToProjective(leftHand,leftHand);
       context.convertRealWorldToProjective(torso,torso);
       context.convertRealWorldToProjective(rightHand,rightHand);
-//      
-//      stroke(0,0,255);
-//      fill(0,0,255);
-//      ellipse(leftHand.x, leftHand.y, 5, 5);
-//      stroke(255,0,0);
-//      fill(255,0,0);
-//      ellipse(rightHand.x, rightHand.y, 5, 5);
+//      println("\n-------------------------------------------------------------");
+//      println(leftHandO.m00+", "+leftHandO.m01+", "+leftHandO.m02+", "+leftHandO.m03+", "+leftHandO.m10+"\n"
+//      +leftHandO.m11+", "+leftHandO.m12+", "+leftHandO.m13+", "+leftHandO.m20+"\n"
+//      +leftHandO.m21+", "+leftHandO.m22+", "+leftHandO.m23+", "+leftHandO.m30+"\n"
+//      +leftHandO.m31+", "+leftHandO.m32+", "+leftHandO.m33);
+//      println("-------------------------------------------------------------\n");
+      stroke(0,0,255);
+      fill(0,0,255);
+      ellipse(leftHand.x, leftHand.y, 10, 10);
+      stroke(255,0,0);
+      fill(255,0,0);
+      ellipse(rightHand.x, rightHand.y, 10, 10);
 //      text("left: (" + leftHand.x + ", " + leftHand.y + ", " + leftHand.z +")",
 //        20, 20);
 //      text("right: (" + rightHand.x + ", " + rightHand.y + ", " + rightHand.z +")",
@@ -166,16 +175,19 @@ void onLostUser(int userId)
 
 void onExitUser(int userId)
 {
+  sendEvent("user", "exit");
   println("onExitUser - userId: " + userId);
 }
 
 void onReEnterUser(int userId)
 {
+  sendEvent("user", "reenter");
   println("onReEnterUser - userId: " + userId);
 }
 
 void onStartCalibration(int userId)
 {
+  sendEvent("user", "calibrating");
   println("onStartCalibration - userId: " + userId);
 }
 
@@ -193,6 +205,7 @@ void onEndCalibration(int userId, boolean successfull)
   { 
     println("  Failed to calibrate user !!!");
     println("  Start pose detection");
+    sendEvent("user", "failed calibration");
     context.startPoseDetection("Psi",userId);
   }
 }

@@ -52,14 +52,19 @@ app.configure(function(){
   
   app.use(require('less-middleware')({ src: __dirname + '/public' }));
   app.use(express.static(path.join(__dirname, 'public')));
-  app.use(osc(io));
+  app.use(osc(io, { log: false }));
+  //app.use(osc(io));
+
 
   if(config.useErrorHandler) app.use(express.errorHandler());
 });
 
 // UI routes
 app.get('/', function(req, res){
-  res.render('index.jade', {title: "Media Gallery"});
+  res.render('index.jade', {
+    title: "Media Gallery",
+    objects: ['img0', 'img1', 'img2', 'img3', 'img4', 'img5']
+  });
 });
 
 
