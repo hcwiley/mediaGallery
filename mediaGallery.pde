@@ -15,6 +15,8 @@ import hypermedia.net.*;
 // SimpleOpenNI vars
 SimpleOpenNI  context;
 boolean       autoCalib=true;
+PVector pleftHand = new PVector();
+PVector prightHand = new PVector();
 PVector leftHand = new PVector();
 PVector rightHand = new PVector();
 PMatrix3D leftHandO = new PMatrix3D();
@@ -100,10 +102,10 @@ void draw()
       stroke(255,0,0);
       fill(255,0,0);
       ellipse(rightHand.x, rightHand.y, 10, 10);
-//      text("left: (" + leftHand.x + ", " + leftHand.y + ", " + leftHand.z +")",
-//        20, 20);
-//      text("right: (" + rightHand.x + ", " + rightHand.y + ", " + rightHand.z +")",
-//        20, 80);
+      text("left: (" + leftHand.x + ", " + leftHand.y + ", " + leftHand.z +")",
+        20, 20);
+      text("right: (" + rightHand.x + ", " + rightHand.y + ", " + rightHand.z +")",
+        20, 80);
       sendHands();
     }
   }    
@@ -111,8 +113,9 @@ void draw()
 
 // send the hand data over udp to the node server
 void sendHands(){
-  if(millis() - lastHandsSend > 15){
+  if(millis() - lastHandsSend > 5){
     lastHandsSend = millis();
+    lerpHands();
     String msg = "{\"hands\":{";
     msg += "\"left\":{";
     msg += "\"x\": \""+leftHand.x+"\",";
@@ -130,6 +133,22 @@ void sendHands(){
     
     convertAndSend(msg);
   }
+}
+
+void lerpHands(){
+  float lerpAmt = .4;
+  PVector tmpL = new PVector(leftHand.x, leftHand.y, leftHand.z);
+  PVector tmpR = new PVector(rightHand.x, rightHand.y, rightHand.z);
+  tmpL.x  = lerp(tmpL.x, pleftHand.x, lerpAmt);
+  tmpL.y  = lerp(tmpL.y, pleftHand.y, lerpAmt);
+  tmpL.z  = lerp(tmpL.z, pleftHand.z, lerpAmt);
+  tmpR.x  = lerp(tmpR.x, pleftHand.x, lerpAmt);
+  tmpR.y  = lerp(tmpR.y, pleftHand.y, lerpAmt);
+  tmpR.z  = lerp(tmpR.z, pleftHand.z, lerpAmt);
+  pleftHand = new PVector(leftHand.x, leftHand.y, leftHand.z);
+  prightHand = new PVector(rightHand.x, rightHand.y, rightHand.z);
+  leftHand = new PVector(tmpL.x, tmpL.y, tmpL.z);
+  rightHand = new PVector(tmpR.x, tmpR.y, tmpR.z);
 }
 
 void sendEvent(String event, String stat){
