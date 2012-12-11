@@ -25,6 +25,13 @@ block content
     .over{
       background-color: #00c;
     }
+    .obj{
+      position: fixed;
+      top: 150px;
+      left: 200px;
+      width: 200px;
+      height: 300px;
+    }
   h1= title
   h4 Current user status: <span id='status'>---</span>
 
@@ -33,7 +40,12 @@ block content
     #right.hand
 
   #gallery
-    for obj in objects
-      .grabbable.span2.offset1
-        img(src='/img/gallery/#{obj}.jpg')
-        h5=obj
+    for obj,i in objects
+      if i > 2
+        .grabbable.obj(style="left: #{(i-3) * 270 + 100}px; top: 620px;")
+          img(src='/img/gallery/#{obj}.jpg')
+          h5=obj
+      else
+        .grabbable.obj(style="left: #{i * 270 + 100}px;")
+          img(src='/img/gallery/#{obj}.jpg')
+          h5=obj
