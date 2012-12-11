@@ -54,12 +54,43 @@ app.configure ->
   #app.use(osc(io));
   app.use express.errorHandler()  if config.useErrorHandler
 
+entries = {}
+
+updateGallery = (next) ->
+  options = {
+    host: "127.0.0.1",
+    port: 8000,
+    path: "/json/gallery",
+    agent: false
+  }
+  data = ""
+  http.get options, (getRes) ->
+    console.log "status: #{getRes.statusCode}"
+  .on 'response', (getRes) ->
+    getRes.on "data", (chunk) ->
+      data += chunk.toString('ASCII')
+    getRes.on "end", () ->
+      #data = JSON.stringify data
+      data = data.replace /\r\n/g, " "
+      data = data.replace /\n/g, " "
+      data = data.replace /\r/g, " "
+      data = JSON.parse data
+      #console.log data
+      entries = data.entries
+      for entry, key in data.entries
+        entries.key = entry
+      #res.end JSON.stringify entries
+      next()
+  .on 'error', (e) ->
+    console.log "ERROR: #{e.message}"
+    next('error')
 
 # UI routes
 app.get "/", (req, res) ->
-  res.render "index.jade",
-    title: "Media Gallery"
-    objects: ["img0", "img1", "img2", "img3", "img4", "img5"]
+  updateGallery (e) ->
+    res.render "index.jade",
+      title: "Media Gallery"
+      objects: entries
 
 
 server.listen app.get("port"), ->

@@ -21,9 +21,10 @@ block content
       background-image: url('/img/hand-right.svg');
     }
     .obj{
-      position: fixed;
+      /*position: fixed;
       top: 150px;
       left: 200px;
+      */
       width: 200px;
       height: 300px;
       z-index: 1;
@@ -48,12 +49,7 @@ block content
     #right.hand
 
   #gallery
-    for obj,i in objects
-      if i > 2
-        .grabbable.obj(style="left: #{(i-3) * 270 + 100}px; top: 620px;")
-          img(src='/img/gallery/#{obj}.jpg')
-          h5=obj
-      else
-        .grabbable.obj(style="left: #{i * 270 + 100}px;")
-          img(src='/img/gallery/#{obj}.jpg')
-          h5=obj
+    for obj in objects
+      .grabbable.obj.span3.offset1
+        img(src='#{obj.image}')
+        h5=obj.title
