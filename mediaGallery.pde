@@ -80,6 +80,8 @@ void draw()
   
   for(int i=0;i<userList.length;i++)
   {
+    if(i > 1)
+      break;
     if(context.isTrackingSkeleton(userList[i])){
       int userId = userList[i];
       context.getJointPositionSkeleton(userId, SimpleOpenNI.SKEL_LEFT_HAND, leftHand);
@@ -136,15 +138,15 @@ void sendHands(){
 }
 
 void lerpHands(){
-  float lerpAmt = .4;
+  float lerpAmt = .6;
   PVector tmpL = new PVector(leftHand.x, leftHand.y, leftHand.z);
   PVector tmpR = new PVector(rightHand.x, rightHand.y, rightHand.z);
   tmpL.x  = lerp(tmpL.x, pleftHand.x, lerpAmt);
   tmpL.y  = lerp(tmpL.y, pleftHand.y, lerpAmt);
   tmpL.z  = lerp(tmpL.z, pleftHand.z, lerpAmt);
-  tmpR.x  = lerp(tmpR.x, pleftHand.x, lerpAmt);
-  tmpR.y  = lerp(tmpR.y, pleftHand.y, lerpAmt);
-  tmpR.z  = lerp(tmpR.z, pleftHand.z, lerpAmt);
+  tmpR.x  = lerp(tmpR.x, prightHand.x, lerpAmt);
+  tmpR.y  = lerp(tmpR.y, prightHand.y, lerpAmt);
+  tmpR.z  = lerp(tmpR.z, prightHand.z, lerpAmt);
   pleftHand = new PVector(leftHand.x, leftHand.y, leftHand.z);
   prightHand = new PVector(rightHand.x, rightHand.y, rightHand.z);
   leftHand = new PVector(tmpL.x, tmpL.y, tmpL.z);

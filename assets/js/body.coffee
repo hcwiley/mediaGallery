@@ -17,12 +17,16 @@ isGrabbing =  @a.isGrabbing
   @a.rightHand.z = parseFloat @a.rightHand.z
   
   # lets put some scale on them
+  # scale is the difference between the hands and the torso
+  # using this to detect selection
   lScale = data.torso.z - data.hands.left.z
   rScale = data.torso.z - data.hands.right.z
-  maxScale = 70
+  maxScale = 100
+  minScale = 5
   pushed = 50
-  lScale = map lScale, 0, 600, 5, maxScale 
-  rScale = map rScale, 0, 600, 5, maxScale 
+  # map the scale between 5 
+  lScale = map lScale, 0, 500, 5, maxScale 
+  rScale = map rScale, 0, 500, 5, maxScale 
   if lScale > pushed
     lScale = maxScale
     $("#left").push()
@@ -47,6 +51,9 @@ checkHandOver = ->
     return null
 
 $.fn.handOver = ->
+  # check other overs
+  # if no others over add class over
+  # else fuck off, i'm holding something
   $(@).addClass "over"
 
 $.fn.handLeave = ->
@@ -69,4 +76,5 @@ $.fn.isHandOver =  (pos)  ->
       return true
   $(me).handLeave()
   false
+
 

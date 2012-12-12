@@ -11,19 +11,26 @@
 
 @a.leftHand = {}
 @a.rightHand = {}
+@a.entries = {}
+@a.grabbed = {}
 
 isGrabbing =  @a.isGrabbing = false
 
 @initGrabbale = ->
   $(".grabbable").each ->
     me = @
-    w0 = $ me .width  
-    h0 = $ me .height  
+    #grab = a.grabbables[$(me).attr('id')] = me;
+    #grab.x = 100;
+    #grab.y = 200;
+    #grab.width = ;
+    w0 = $(me).width  
+    h0 = $(me).height  
     $(me).data "ratio", h0 / w0
     #$(me).bind "click",  e  ->
 
 $.fn.grabbed =  (pos)  ->
   me = @
+  isGrabbing = true
   $(me).addClass 'grabbed'
   other = {}
   if pos is a.leftHand
@@ -33,7 +40,8 @@ $.fn.grabbed =  (pos)  ->
   width = other.x - pos.x
   width = 50 if width < 50
   $(me).width width
-  $(me).height width * $(me).data "ratio" 
+  #$(me).height width * $(me).data "ratio" 
+  $(me).height $(me).children('img').height() + 20
   x = pos.x - $(me).width() / 2
   y = pos.y - $(me).height() / 2
   $(me).css "position", "fixed"
@@ -66,4 +74,5 @@ $(window).ready ->
     $("#status").text data.user  if data.user
 
   initGrabbale()
+
 
