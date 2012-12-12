@@ -58,8 +58,8 @@ entries = {}
 
 updateGallery = (next) ->
   options = {
-    host: "127.0.0.1",
-    port: 8000,
+    host: "sbm.art72.org",
+    port: 80,
     path: "/json/gallery",
     agent: false
   }
