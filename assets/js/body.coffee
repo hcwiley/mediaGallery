@@ -11,10 +11,12 @@ isGrabbing =  @a.isGrabbing
   $("#left").css("top", data.hands.left.y + "px")
   $("#right").css("left", data.hands.right.x + "px")
   $("#right").css("top", data.hands.right.y + "px")
-  @a.leftHand = data.hands.left
-  @a.rightHand = data.hands.right
-  @a.leftHand.z = parseFloat @a.leftHand.z
-  @a.rightHand.z = parseFloat @a.rightHand.z
+  leftHand = data.hands.left
+  rightHand = data.hands.right
+  leftHand.z = parseFloat leftHand.z
+  rightHand.z = parseFloat rightHand.z
+  @a.user.leftHand = leftHand
+  @a.user.rightHand = rightHand
   
   # lets put some scale on them
   # scale is the difference between the hands and the torso
@@ -47,7 +49,7 @@ isGrabbing =  @a.isGrabbing
 
 checkHandOver = ->
   $(".grabbable").each ->
-    $(@).isHandOver a.leftHand
+    $(@).isHandOver a.user.leftHand
     return null
 
 $.fn.handOver = ->

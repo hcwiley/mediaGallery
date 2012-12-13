@@ -6,11 +6,14 @@
 # =require osc.io
 # =require helpers
 # =require body
+# =require models/user
+# =require models/entry
+# =require collections/entries
 
 @a = @a || {}
 
-@a.leftHand = {}
-@a.rightHand = {}
+@a.user = {}
+
 @a.entries = {}
 @a.grabbed = {}
 
@@ -19,12 +22,10 @@ isGrabbing =  @a.isGrabbing = false
 @initGrabbale = ->
   $(".grabbable").each ->
     me = @
-    #grab = a.grabbables[$(me).attr('id')] = me;
-    #grab.x = 100;
-    #grab.y = 200;
-    #grab.width = ;
-    w0 = $(me).width  
-    h0 = $(me).height  
+    w0 = $(me).width()
+    h0 = $(me).height()
+    entry = new Entry { width0: w0, height0: h0 }
+    a.entries.add entry
     $(me).data "ratio", h0 / w0
     #$(me).bind "click",  e  ->
 
@@ -33,10 +34,10 @@ $.fn.grabbed =  (pos)  ->
   isGrabbing = true
   $(me).addClass 'grabbed'
   other = {}
-  if pos is a.leftHand
-    other = a.rightHand
+  if pos is a.user.leftHand
+    other = a.user.rightHand
   else
-    other = a.leftHand
+    other = a.user.leftHand
   width = other.x - pos.x
   width = 50 if width < 50
   $(me).width width
@@ -51,7 +52,7 @@ $.fn.grabbed =  (pos)  ->
 $.fn.push = ->
   $(@).addClass "pushed"
   if $(".over").length > 0 and !isGrabbing
-    $($(".over")[0]).grabbed(a.leftHand)
+    $($(".over")[0]).grabbed(a.user.leftHand)
 
 $.fn.reset = ->
   $(@).removeClass "pushed"
@@ -60,17 +61,24 @@ $.fn.reset = ->
 $(window).ready ->
   console.log "lets do it"
   socket = io.connect "http://localhost" 
-  osc_client = new OscClient   #UdpSender '127.0.0.1', 7654 ;
-  osc_server = new OscServer 
+  osc_client = new OscClient {
+    host: "127.0.0.1"
+    port: 7654
+  }
+  osc_server = new OscServer {
     host: "127.0.0.1"
     port: 7655
+  }
    
+  a.user = new User()
+  a.entries = new Entries()
   osc_server.on "osc",  (msg)  ->
     
     #console.log 'got message' ;
     #console.log msg.path, msg.params ;
     data = JSON.parse msg.path 
-    handleHands data  if data.hands
+    a.user.updatePosition data  if data.hands
+    a.user.updateStatus data  if data.user
     $("#status").text data.user  if data.user
 
   initGrabbale()
