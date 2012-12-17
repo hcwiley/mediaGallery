@@ -3,18 +3,12 @@
 isGrabbing =  @a.isGrabbing
 
 @handleHands =  (data)  ->
-  data.hands.left.x = map data.hands.left.x, 0, 640, 0, $(window).width()   
-  data.hands.right.x = map data.hands.right.x, 0, 640, 0, $(window).width()   
-  data.hands.left.y = map data.hands.left.y, 0, 640, 0, $(window).height()   
-  data.hands.right.y = map data.hands.right.y, 0, 640, 0, $(window).height()   
   $("#left").css("left", data.hands.left.x + "px")
   $("#left").css("top", data.hands.left.y + "px")
   $("#right").css("left", data.hands.right.x + "px")
   $("#right").css("top", data.hands.right.y + "px")
   leftHand = data.hands.left
   rightHand = data.hands.right
-  leftHand.z = parseFloat leftHand.z
-  rightHand.z = parseFloat rightHand.z
   @a.user.leftHand = leftHand
   @a.user.rightHand = rightHand
   
@@ -48,8 +42,8 @@ isGrabbing =  @a.isGrabbing
   checkHandOver()
 
 checkHandOver = ->
-  $(".grabbable").each ->
-    $(@).isHandOver a.user.leftHand
+  a.entries.forEach (el) ->
+    $(el).isHandOver a.user.leftHand
     return null
 
 $.fn.handOver = ->

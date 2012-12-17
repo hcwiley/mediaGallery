@@ -24,7 +24,13 @@ isGrabbing =  @a.isGrabbing = false
     me = @
     w0 = $(me).width()
     h0 = $(me).height()
-    entry = new Entry { width0: w0, height0: h0 }
+    entry = new Entry { 
+      width0: w0,
+      height0: h0
+      x0: $(me).position().left,
+      y0: $(me).position().top,
+      el: me
+    }
     a.entries.add entry
     $(me).data "ratio", h0 / w0
     #$(me).bind "click",  e  ->
