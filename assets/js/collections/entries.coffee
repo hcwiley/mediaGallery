@@ -20,7 +20,7 @@ Entries = Backbone.Collection.extend({
   , isPulled: (hand) ->
     @.forEach (e) ->
       if e.inMyBoundingBox hand
-        e.pulled()
+        e.pulled(hand)
 
   , notGrabbed: (grabbed) ->
     @.forEach (e) ->

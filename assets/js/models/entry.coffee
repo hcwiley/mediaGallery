@@ -39,13 +39,11 @@ Entry = Backbone.Model.extend({
   , updateX: () ->
     me = @.attributes
     @.setCorners()
-    console.log 'updated x'
     me.el.css 'left', me.x
 
   , updateY: () ->
     me = @.attributes
     @.setCorners()
-    console.log 'updated y'
     me.el.css 'top', me.y
 
   , setCorners: () ->
@@ -57,15 +55,15 @@ Entry = Backbone.Model.extend({
 
   , center: (loc) ->
     me = @.attributes
-    cenx = loc.x - (me.width / 2)
+    cenx = loc.x() - (me.width / 2)
     @.set x: cenx
-    ceny = loc.y - (me.height / 2)
+    ceny = loc.y() - (me.height / 2)
     @.set y: ceny
 
   , inMyBoundingBox: (hand) ->
     me = @.attributes
-    if hand.x > me.left && hand.x < me.right
-      if hand.y > me.top && hand.y < me.bottom
+    if hand.x() > me.left && hand.x() < me.right
+      if hand.y() > me.top && hand.y() < me.bottom
         return true
     return false
 
@@ -83,21 +81,21 @@ Entry = Backbone.Model.extend({
   , pushed: () ->
     me = @.attributes
     if a.grabbed
-      a.grabbed.drop()
+      a.grabbed.entry.drop()
     else
       me.wasPushed = true
 
-  , pulled: () ->
+  , pulled: (hand) ->
     me = @.attributes
     if !a.grabbed && me.wasPushed
-      @.grab()
-      return @
-    else
-      return false
+      @.grab hand
 
-  , grab: () ->
+  , grab: (hand) ->
     me = @.attributes
-    a.grabbed = @
+    a.grabbed = {
+      entry: @,
+      hand: hand
+    }
     a.entries.notGrabbed @
     me.el.addClass 'grabbed'
     console.log "you grabbing me?: #{me.el.index()}"

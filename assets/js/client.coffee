@@ -23,6 +23,7 @@
   $(".grabbable").each ->
     me = $(@)
     me.css 'left', (me.index() % 4) * ( me.width() + parseInt(me.css('margin-left').replace('px','')) )+ 100
+    me.css 'top', (parseInt(me.index() / 4) * 400) + 200
     me.animate {
       opacity: 1
     }, 500
