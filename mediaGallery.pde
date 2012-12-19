@@ -24,7 +24,7 @@ PMatrix3D rightHandO = new PMatrix3D();
 PVector torso = new PVector();
 
 // Font vars
-PFont fontA;
+//PFont fontA;
 
 // UDP vars
 UDP udp;
@@ -56,10 +56,10 @@ void setup()
   smooth();
   
   size(context.depthWidth(), context.depthHeight()); 
-  fontA = loadFont("Ziggurat-HTF-Black-32.vlw");
+//  fontA = loadFont("Ziggurat-HTF-Black-32.vlw");
 
   // Set the font and its size (in units of pixels)
-  textFont(fontA, 25);
+//  textFont(fontA, 25);
 //  text("left: (###, ###, ###)", 20, 20);
 //  text("right: (###, ###, ###)", 20, 120);
   udp = new UDP( this, 7654 );
