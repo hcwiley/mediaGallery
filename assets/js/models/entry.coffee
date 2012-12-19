@@ -20,7 +20,8 @@ Entry = Backbone.Model.extend({
     top: 0,
     bottom: 0
   }
-  , initialize: (attrs) ->
+
+  initialize: (attrs) ->
     @.set {
       width: attrs.width0
       height: attrs.height0
@@ -35,38 +36,38 @@ Entry = Backbone.Model.extend({
     @.on 'change:x', @updateX
     @.on 'change:y', @updateY
     @.on 'change:width', @updateWidth
-    console.log "im such a drag...\n#{attrs.height0}" 
+    console.log "im such a drag..." 
 
-  , updateX: () ->
+  updateX: ->
     me = @.attributes
     @.setCorners()
     me.el.css 'left', me.x
 
-  , updateY: () ->
+  updateY: ->
     me = @.attributes
     @.setCorners()
     me.el.css 'top', me.y
 
-  , updateWidth: () ->
+  updateWidth: ->
     me = @.attributes
     @.setCorners()
     me.el.width me.width
 
-  , setCorners: () ->
+  setCorners: ->
     me = @.attributes
     me.left = me.x
     me.right = me.x + me.width
     me.top = me.y
     me.bottom = me.y + me.height
 
-  , center: (loc) ->
+  center: (loc) ->
     me = @.attributes
     cenx = loc.x() - (me.width / 2)
     @.set x: cenx
     ceny = loc.y() - (me.height / 2)
     @.set y: ceny
 
-  , scaleTo: (controlHand, otherHand) ->
+  scaleTo: (controlHand, otherHand) ->
     me = @.attributes
     diff = controlHand.x() - otherHand.x()
     if diff < 0
@@ -75,37 +76,37 @@ Entry = Backbone.Model.extend({
       width: diff
     }
 
-  , inMyBoundingBox: (hand) ->
+  inMyBoundingBox: (hand) ->
     me = @.attributes
-    if hand.x() > me.left && hand.x() < me.right
-      if hand.y() > me.top && hand.y() < me.bottom
+    if hand?.x() > me?.left && hand?.x() < me?.right
+      if hand?.y() > me.top && hand?.y() < me?.bottom
         return true
     return false
 
-  , checkOver: (hand) ->
+  checkOver: (hand) ->
     me = @.attributes
     if hand
       if @.inMyBoundingBox hand
           return @.trigger 'over'
     me.el.removeClass 'over' 
 
-  , over: () ->
+  over: ->
     me = @.attributes
     me.el.addClass 'over'
 
-  , pushed: () ->
+  pushed: ->
     me = @.attributes
     if a.grabbed
       a.grabbed.entry.drop()
     else
       me.wasPushed = true
 
-  , pulled: (hand) ->
+  pulled: (hand) ->
     me = @.attributes
     if !a.grabbed && me.wasPushed
       @.grab hand
 
-  , grab: (hand) ->
+  grab: (hand) ->
     me = @.attributes
     a.grabbed = {
       entry: @,
@@ -115,14 +116,14 @@ Entry = Backbone.Model.extend({
     me.el.addClass 'grabbed'
     console.log "you grabbing me?: #{me.el.index()}"
 
-  , drop: () ->
+  drop: ->
     me = @.attributes
     a.grabbed = false
     me.el.removeClass 'grabbed'
     a.entries.reset()
     console.log "you dropped me!: #{me.el.index()}"
 
-  , reset: () ->
+  reset: ->
     me = @.attributes
     me.el.removeClass 'not-grabbed'
 

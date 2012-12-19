@@ -19,6 +19,7 @@
 @a.pushed = {}
 
 @initGrabbale = ->
+  a.entries = new Entries()
   $(".grabbable").each ->
     me = $(@)
     me.css 'left', (me.index() % 4) * ( me.width() + parseInt(me.css('margin-left').replace('px','')) )+ 100
@@ -57,12 +58,13 @@ $(window).ready ->
     host: "127.0.0.1"
     port: 7655
   }
+
+  initGrabbale()
    
   a.user = new User({
     leftCursor: $('#leftCursor'),
     rightCursor: $('#rightCursor')
   })
-  a.entries = new Entries()
   osc_server.on "osc",  (msg)  ->
     
     #console.log 'got message' ;
@@ -72,6 +74,5 @@ $(window).ready ->
     a.user.updateStatus data  if data.user
     $("#status").text data.user  if data.user
 
-  initGrabbale()
 
 

@@ -6,16 +6,48 @@ Hand = Backbone.Model.extend({
   defaults: {
     x: 0,
     y: 0,
-    z: 0
+    z: 0,
+    cursor: "",
+    parent: "",
   }
   
-  , initialize: () ->
+  initialize: ->
     console.log "i'm a hand object damn it"
-  , x: ->
+    @.on 'change', @moved
+
+  moved: ->
+    me = @.attributes
+    me.cursor.css 'left', me.x
+    me.cursor.css 'top', me.y
+    if a.grabbed?.hand == @
+      a.grabbed.entry.center @
+      a.grabbed.entry.scaleTo @, me.parent.otherHand(@)
+    else
+      a.entries.isOver @
+
+  doPushCheck: ->
+    me = @.attributes
+    push = me.parent?.attributes.torso?.z - me.z
+    push = map push, 0, 700, 0, 100
+    scale = map push, 0, 100, 10, 100
+
+    me.cursor.width scale
+    me.cursor.height scale
+
+    # lets check and see if they pushed
+    pushedThresh = 70
+    if push > pushedThresh
+      me.cursor.addClass 'pushed'
+      a.entries.isPushed @
+    else
+      me.cursor.removeClass 'pushed'
+      a.entries.isPulled @
+
+  x: ->
     @.attributes.x
-  , y: ->
+  y: ->
     @.attributes.y
-  , z: ->
+  z: ->
     @.attributes.z
 })
 
@@ -23,13 +55,20 @@ User = Backbone.Model.extend({
   defaults: {
     leftHand: new Hand(),
     rightHand: new Hand(),
-    leftCursor: "",
-    rightCursor: "",
     torso: {},
     status: ""
   }
   
-  , initialize: () ->
+  initialize: (attrs) ->
+    @.attributes.leftHand.set {
+      cursor: attrs.leftCursor
+      , parent: @
+    }
+    @.attributes.rightHand.set {
+      cursor: attrs.rightCursor
+      , parent: @
+    }
+
     console.log 'i live. you die...'
     @.on 'change:leftHand', @leftMoved
     @.on 'change:rightHand', @rightMoved
@@ -37,7 +76,7 @@ User = Backbone.Model.extend({
     @.on 'change:status', (model, status) ->
       console.log "updated status: #{status}"
 
-  , updatePosition: (data) ->
+  updatePosition: (data) ->
     me = @.attributes
     data.hands.left.x = map data.hands.left.x, 0, 640, 0, $(window).width()   
     data.hands.right.x = map data.hands.right.x, 0, 640, 0, $(window).width()   
@@ -58,65 +97,22 @@ User = Backbone.Model.extend({
       y: data.hands.right.y,
       z: data.hands.right.z
     }
-    @.leftMoved()
-    @.rightMoved()
   
-  , updateStatus: (status) ->
+  updateStatus: (status) ->
     @.set { status: status }
   
-  , leftMoved: () ->
-    me = @.attributes
-    me.leftCursor.css 'left', me.leftHand.x()
-    me.leftCursor.css 'top', me.leftHand.y()
-    if a.grabbed?.hand == me.leftHand
-      console.log 'left hand holding'
-      a.grabbed.entry.center me.leftHand
-      a.grabbed.entry.scaleTo me.leftHand, me.rightHand
-    else
-      a.entries.isOver me.leftHand
-
-  , rightMoved: () ->
-    me = @.attributes
-    me.rightCursor.css 'left', me.rightHand.x()
-    me.rightCursor.css 'top', me.rightHand.y()
-    if a.grabbed?.hand == me.rightHand
-      console.log 'right hand holding'
-      a.grabbed.entry.center me.rightHand
-      a.grabbed.entry.scaleTo me.rightHand, me.leftHand
-    else
-      a.entries.isOver me.rightHand
-  
-  , torsoMoved: () ->
+  torsoMoved: ->
     me = @.attributes
     # lets do some push threshhold and hand scale mapping
     # left then right
-    leftPush = me.torso.z - me.leftHand.z()
-    leftPush = map leftPush, 0, 700, 0, 100
-    leftScale = map leftPush, 0, 100, 10, 100
+    me.leftHand.doPushCheck()
+    me.rightHand.doPushCheck()
 
-    rightPush = me.torso.z - me.rightHand.z()
-    rightPush = map rightPush, 0, 700, 0, 100
-    rightScale = map rightPush, 0, 100, 10, 100
-    me.leftCursor.width leftScale
-    me.leftCursor.height leftScale
-    me.rightCursor.width rightScale
-    me.rightCursor.height rightScale
-
-    # lets check and see if they pushed
-    pushedThresh = 70
-    if leftPush > pushedThresh
-      me.leftCursor.addClass 'pushed'
-      a.entries.isPushed me.leftHand
-    else
-      me.leftCursor.removeClass 'pushed'
-      a.entries.isPulled me.leftHand
-
-    if rightPush > pushedThresh
-      me.rightCursor.addClass 'pushed'
-      a.entries.isPushed me.rightHand
-    else
-      me.rightCursor.removeClass 'pushed'
-      a.entries.isPulled me.rightHand
+  otherHand: (thisHand) ->
+    me = @.attributes
+    if thisHand == me.leftHand
+      return me.rightHand
+    me.leftHand
 
 
 })
