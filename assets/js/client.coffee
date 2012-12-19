@@ -15,13 +15,17 @@
 @a.user = {}
 
 @a.entries = {}
-@a.grabbed = {}
-
-isGrabbing =  @a.isGrabbing = false
+@a.grabbed = false
+@a.grabbedMap = undefined
+@a.pushed = {}
 
 @initGrabbale = ->
   $(".grabbable").each ->
-    me = @
+    me = $(@)
+    me.css 'left', (me.index() % 4) * ( me.width() + parseInt(me.css('margin-left').replace('px','')) )+ 100
+    me.animate {
+      opacity: 1
+    }, 500
     w0 = $(me).width()
     h0 = $(me).height()
     entry = new Entry { 
@@ -29,11 +33,18 @@ isGrabbing =  @a.isGrabbing = false
       height0: h0
       x0: $(me).position().left,
       y0: $(me).position().top,
-      el: me
+      el: $(me)
     }
     a.entries.add entry
-    $(me).data "ratio", h0 / w0
-    #$(me).bind "click",  e  ->
+    # lets bind some mouse events to trigger kinect driven events
+    $(me).mouseover(->
+      entry.trigger 'over'
+    ).mouseleave( ->
+      entry.checkOver()
+    ).mousedown(->
+      entry.trigger 'pushed'
+    ).mouseup ->
+      entry.trigger 'pulled'
 
 $.fn.grabbed =  (pos)  ->
   me = @
@@ -76,7 +87,10 @@ $(window).ready ->
     port: 7655
   }
    
-  a.user = new User()
+  a.user = new User({
+    leftCursor: $('#leftCursor'),
+    rightCursor: $('#rightCursor')
+  })
   a.entries = new Entries()
   osc_server.on "osc",  (msg)  ->
     

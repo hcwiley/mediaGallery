@@ -14,16 +14,106 @@ Entry = Backbone.Model.extend({
     y0: 0,
     data: {},
     isGrabbed: false,
-    el: ""
-  },
-  initialize: (attrs) ->
+    el: "",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0
+  }
+  , initialize: (attrs) ->
     @.set {
       width: attrs.width0
       height: attrs.height0
       x: attrs.x0
       y: attrs.y0
+      el: attrs.el
     }
+    @.setCorners()
+    @.on 'over', @.over
+    @.on 'pushed', @.pushed
+    @.on 'pulled', @.pulled
+    @.on 'change:x', @updateX
+    @.on 'change:y', @updateY
     console.log "im such a drag...\n#{attrs.height0}" 
+
+  , updateX: () ->
+    me = @.attributes
+    @.setCorners()
+    console.log 'updated x'
+    me.el.css 'left', me.x
+
+  , updateY: () ->
+    me = @.attributes
+    @.setCorners()
+    console.log 'updated y'
+    me.el.css 'top', me.y
+
+  , setCorners: () ->
+    me = @.attributes
+    me.left = me.x
+    me.right = me.x + me.width
+    me.top = me.y
+    me.bottom = me.y + me.height
+
+  , center: (loc) ->
+    me = @.attributes
+    cenx = loc.x - (me.width / 2)
+    @.set x: cenx
+    ceny = loc.y - (me.height / 2)
+    @.set y: ceny
+
+  , inMyBoundingBox: (hand) ->
+    me = @.attributes
+    if hand.x > me.left && hand.x < me.right
+      if hand.y > me.top && hand.y < me.bottom
+        return true
+    return false
+
+  , checkOver: (hand) ->
+    me = @.attributes
+    if hand
+      if @.inMyBoundingBox hand
+          return @.trigger 'over'
+    me.el.removeClass 'over' 
+
+  , over: () ->
+    me = @.attributes
+    me.el.addClass 'over'
+
+  , pushed: () ->
+    me = @.attributes
+    if a.grabbed
+      a.grabbed.drop()
+    else
+      me.wasPushed = true
+
+  , pulled: () ->
+    me = @.attributes
+    if !a.grabbed && me.wasPushed
+      @.grab()
+      return @
+    else
+      return false
+
+  , grab: () ->
+    me = @.attributes
+    a.grabbed = @
+    a.entries.notGrabbed @
+    me.el.addClass 'grabbed'
+    console.log "you grabbing me?: #{me.el.index()}"
+
+  , drop: () ->
+    me = @.attributes
+    a.grabbed = false
+    me.el.removeClass 'grabbed'
+    a.entries.reset()
+    console.log "you dropped me!: #{me.el.index()}"
+
+  , reset: () ->
+    me = @.attributes
+    me.el.removeClass 'not-grabbed'
+
+
 })
 
 @Entry = Entry

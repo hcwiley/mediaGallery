@@ -12,24 +12,24 @@ block content
       -webkit-background-size: 100% 100%;
       z-index: 10;
     }
-    #left{
+    #leftCursor{
       /*background-color: #00f;*/
       background-image: url('/img/hand-left.svg');
     }
-    #right{
+    #rightCursor{
       /*background-color: #f00;*/
       background-image: url('/img/hand-right.svg');
     }
     .obj{
-      /*position: fixed;
+      position: fixed;
       top: 150px;
       left: 200px;
-      */
       width: 200px;
       height: 300px;
       z-index: 1;
-      opacity: .7;
+      opacity: 0;
       border: 1px solid #000;
+      margin: 20px 40px;
     }
     .obj img{
       width: 100%;
@@ -42,12 +42,22 @@ block content
       z-index: 2;
       opacity: 1;
     }
+    .obj.not-grabbed {
+      width: 50px;
+      height: 50px;
+      z-index: 0;
+      opacity: .5;
+    }
+    .obj.grabbed {
+      opacity: 1;
+      z-index: 10;
+    }
   h1= title
   h4 Current user status: <span id='status'>---</span>
 
   #play
-    #left.hand
-    #right.hand
+    #leftCursor.hand
+    #rightCursor.hand
 
   #gallery
     for obj in objects
