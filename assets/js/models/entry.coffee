@@ -34,6 +34,7 @@ Entry = Backbone.Model.extend({
     @.on 'pulled', @.pulled
     @.on 'change:x', @updateX
     @.on 'change:y', @updateY
+    @.on 'change:width', @updateWidth
     console.log "im such a drag...\n#{attrs.height0}" 
 
   , updateX: () ->
@@ -45,6 +46,11 @@ Entry = Backbone.Model.extend({
     me = @.attributes
     @.setCorners()
     me.el.css 'top', me.y
+
+  , updateWidth: () ->
+    me = @.attributes
+    @.setCorners()
+    me.el.width me.width
 
   , setCorners: () ->
     me = @.attributes
@@ -59,6 +65,15 @@ Entry = Backbone.Model.extend({
     @.set x: cenx
     ceny = loc.y() - (me.height / 2)
     @.set y: ceny
+
+  , scaleTo: (controlHand, otherHand) ->
+    me = @.attributes
+    diff = controlHand.x() - otherHand.x()
+    if diff < 0
+      diff *= -1
+    @.set {
+      width: diff
+    }
 
   , inMyBoundingBox: (hand) ->
     me = @.attributes

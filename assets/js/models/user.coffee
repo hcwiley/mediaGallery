@@ -71,6 +71,7 @@ User = Backbone.Model.extend({
     if a.grabbed?.hand == me.leftHand
       console.log 'left hand holding'
       a.grabbed.entry.center me.leftHand
+      a.grabbed.entry.scaleTo me.leftHand, me.rightHand
     else
       a.entries.isOver me.leftHand
 
@@ -81,6 +82,7 @@ User = Backbone.Model.extend({
     if a.grabbed?.hand == me.rightHand
       console.log 'right hand holding'
       a.grabbed.entry.center me.rightHand
+      a.grabbed.entry.scaleTo me.rightHand, me.leftHand
     else
       a.entries.isOver me.rightHand
   
