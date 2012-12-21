@@ -39,7 +39,6 @@ Entry = Backbone.Model.extend({
     @.setCorners()
     @.updateEl()
     console.log "im such a drag..." 
-    console.log attrs.el
 
   updateEl: ->
     me = @.attributes
@@ -115,9 +114,8 @@ Entry = Backbone.Model.extend({
 
   pulled: (hand) ->
     me = @.attributes
-    if !a.grabbed && me.wasPushed
+    if !a.grabbed && me.wasPushed && a.lastGrabbed != @
       @.grab hand
-    @.trigger 'wasPulled'
 
   grab: (hand) ->
     me = @.attributes
@@ -126,15 +124,19 @@ Entry = Backbone.Model.extend({
       hand: hand
     }
     a.entries.notGrabbed @
+    a.lastGrabbed = false
     me.el.addClass 'grabbed'
     console.log "you grabbing me?: #{me.el.index()}"
+    @.trigger 'wasGrabbed'
 
   drop: ->
     me = @.attributes
     a.grabbed = false
+    a.lastGrabbed = @
     me.el.removeClass 'grabbed'
     a.entries.reset()
     console.log "you dropped me!: #{me.el.index()}"
+    @.trigger 'wasDropped'
 
   reset: ->
     me = @.attributes

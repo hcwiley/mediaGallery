@@ -17,6 +17,7 @@
 
 @a.entries = {}
 @a.grabbed = false
+@a.lastGrabbed = false
 @a.grabbedMap = undefined
 @a.pushed = {}
 
@@ -52,8 +53,9 @@
 
     # check if its the tutorial box
     if me.attr('id') == 'tut'
-      entry.on 'wasPulled', ->
+      entry.on 'wasGrabbed', ->
         $('#ended .text').text 'Well done.. now lets play'
+        entry.drop()
         setTimeout ->
           me.animate({
             opacity: 0
