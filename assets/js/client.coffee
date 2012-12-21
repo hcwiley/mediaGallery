@@ -84,13 +84,14 @@ $(window).ready ->
       startTutorial()
       console.log data
   $('#signInModal').modal 'show'
-  setTimeout ->
-    $('#email').val('foo@bar.com')
+  if window.location.hash.match 'skip'
     setTimeout ->
-      $('.submit').trigger 'click'
-    , 800
-  , 1000
-  console.log "lets do it"
+      $('#email').val('foo@bar.com')
+      setTimeout ->
+        $('.submit').trigger 'click'
+      , 800
+    , 700
+  # set up the socket.io and OSC
   socket = io.connect "http://localhost" 
   osc_client = new OscClient {
     host: "127.0.0.1"
@@ -101,20 +102,18 @@ $(window).ready ->
     port: 7655
   }
 
+  # lets make some shit grabbable
   initGrabbale()
    
   a.user = new User({
     leftCursor: $('#leftCursor'),
     rightCursor: $('#rightCursor')
   })
+
   osc_server.on "osc",  (msg)  ->
-    
-    #console.log 'got message' ;
-    #console.log msg.path, msg.params ;
     data = JSON.parse msg.path 
     a.user.updatePosition data  if data.hands
-    a.user.updateStatus data  if data.user
-    $("#status").text data.user  if data.user
+    a.user.set({'status': data.user })  if data.user
 
 
 

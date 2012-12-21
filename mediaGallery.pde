@@ -104,10 +104,10 @@ void draw()
       stroke(255,0,0);
       fill(255,0,0);
       ellipse(rightHand.x, rightHand.y, 10, 10);
-      text("left: (" + leftHand.x + ", " + leftHand.y + ", " + leftHand.z +")",
-        20, 20);
-      text("right: (" + rightHand.x + ", " + rightHand.y + ", " + rightHand.z +")",
-        20, 80);
+//      text("left: (" + leftHand.x + ", " + leftHand.y + ", " + leftHand.z +")",
+//        20, 20);
+//      text("right: (" + rightHand.x + ", " + rightHand.y + ", " + rightHand.z +")",
+//        20, 80);
       sendHands();
     }
   }    
@@ -138,7 +138,7 @@ void sendHands(){
 }
 
 void lerpHands(){
-  float lerpAmt = .6;
+  float lerpAmt = .7;
   PVector tmpL = new PVector(leftHand.x, leftHand.y, leftHand.z);
   PVector tmpR = new PVector(rightHand.x, rightHand.y, rightHand.z);
   tmpL.x  = lerp(tmpL.x, pleftHand.x, lerpAmt);

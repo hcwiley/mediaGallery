@@ -73,8 +73,7 @@ User = Backbone.Model.extend({
     @.on 'change:leftHand', @leftMoved
     @.on 'change:rightHand', @rightMoved
     @.on 'change:torso', @torsoMoved
-    @.on 'change:status', (model, status) ->
-      console.log "updated status: #{status}"
+    @.on 'change:status', @statusUpdated
 
   updatePosition: (data) ->
     me = @.attributes
@@ -98,8 +97,9 @@ User = Backbone.Model.extend({
       z: data.hands.right.z
     }
   
-  updateStatus: (status) ->
-    @.set { status: status }
+  statusUpdated: () ->
+    me = @.attributes
+    $("#status").text me.status
   
   torsoMoved: ->
     me = @.attributes
