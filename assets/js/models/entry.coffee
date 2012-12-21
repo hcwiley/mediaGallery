@@ -39,6 +39,7 @@ Entry = Backbone.Model.extend({
     @.setCorners()
     @.updateEl()
     console.log "im such a drag..." 
+    console.log attrs.el
 
   updateEl: ->
     me = @.attributes
@@ -116,6 +117,7 @@ Entry = Backbone.Model.extend({
     me = @.attributes
     if !a.grabbed && me.wasPushed
       @.grab hand
+    @.trigger 'wasPulled'
 
   grab: (hand) ->
     me = @.attributes

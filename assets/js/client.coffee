@@ -24,11 +24,12 @@
   a.entries = new Entries()
   $(".grabbable").each ->
     me = $(@)
-    me.css 'left', (me.index() % 4) * ( me.width() + parseInt(me.css('margin-left').replace('px','')) )+ 100
-    me.css 'top', (parseInt(me.index() / 4) * 400) 
-    me.animate {
-      opacity: 1
-    }, 500
+    if me.hasClass('obj')
+      me.css 'left', (me.index() % 4) * ( me.width() + 40 )+ 100
+      me.css 'top', (parseInt(me.index() / 4) * 400) 
+      me.animate {
+        opacity: 1
+      }, 500
     w0 = $(me).width()
     h0 = $(me).height()
     entry = new Entry { 
@@ -49,10 +50,29 @@
     ).mouseup ->
       entry.trigger 'pulled'
 
+    # check if its the tutorial box
+    if me.attr('id') == 'tut'
+      entry.on 'wasPulled', ->
+        $('#ended .text').text 'Well done.. now lets play'
+        setTimeout ->
+          me.animate({
+            opacity: 0
+          }, 700, ->
+            me.remove()
+            $('#gallery').css('visibility', 'visible').animate({
+              opacity: 1
+            }, 600)
+          )
+        , 1500
+
 @startTutorial = ->
   $('#tut').show()
   vid = document.getElementById 'tut-video'
   vid.play()
+  vid.addEventListener 'ended', ->
+    $('#tut-video').fadeOut( ->
+      $('#ended').show()
+    )
 
 $(window).ready ->
   $('#signInModal .submit').click (e) ->
@@ -62,6 +82,12 @@ $(window).ready ->
       startTutorial()
       console.log data
   $('#signInModal').modal 'show'
+  setTimeout ->
+    $('#email').val('foo@bar.com')
+    setTimeout ->
+      $('.submit').trigger 'click'
+    , 800
+  , 1000
   console.log "lets do it"
   socket = io.connect "http://localhost" 
   osc_client = new OscClient {

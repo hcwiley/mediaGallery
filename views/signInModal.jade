@@ -5,6 +5,6 @@
   .modal-body
     h4 Email Registration
     form.span5.offset-1(action='/email', method='post')
-      input.span5(name='email', type='text', placeholder='Email')
+      input#email.span5(name='email', type='text', placeholder='Email', tabindex=1)
       br
       input.submit.btn(type='submit') Sign in

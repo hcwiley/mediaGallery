@@ -21,3 +21,90 @@ body {
 }
 
 @import "bootstrap/responsive";
+
+.hand{
+  width: 20px;
+  height: 20px;
+  position: fixed;
+  left: 0px;
+  top: 300px;
+  -o-background-size: 100% 100%;
+  -webkit-background-size: 100% 100%;
+  z-index: 10;
+}
+#leftCursor{
+  /*background-color: #00f;*/
+  background-image: url('/img/hand-left.svg');
+}
+
+#rightCursor{
+  /*background-color: #f00;*/
+  background-image: url('/img/hand-right.svg');
+}
+
+#gallery{
+  position: relative;
+  display: block;
+  visibility: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.obj{
+  position: absolute;
+  top: 150px;
+  left: 200px;
+  width: 200px;
+  height: 300px;
+  z-index: 1;
+  opacity: 0;
+  border: 1px solid #000;
+  margin: 20px 40px;
+}
+
+.obj img{
+  width: 100%;
+  height: auto;
+}
+
+.pushed{
+  background-color: #0c0;
+}
+
+.over{
+  z-index: 2;
+  opacity: 1;
+}
+
+.obj.not-grabbed {
+  width: 50px;
+  height: 50px;
+  z-index: 0;
+  opacity: .5;
+}
+
+.obj.grabbed {
+  opacity: 1;
+  z-index: 10;
+}
+
+#tut {
+  diplsay: none;
+  position: absolute;
+  left: 40%;
+  top: 200px;
+  z-index: 20;
+  width: 400px;
+  height: 300px;
+  border: 1px dashed #000
+}
+
+#tut.over {
+  background-color: #f00;
+}
+
+#ended {
+ width: 310px;
+ height: 30px;
+ margin: 120px auto;   
+}
