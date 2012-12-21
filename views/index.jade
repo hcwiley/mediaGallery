@@ -61,6 +61,6 @@ block content
 
   #gallery
     for obj in objects
-      .grabbable.obj.span3.offset1
+      .grabbable.obj.span3.offset1(data-title="#{obj.title}", data-desc="#{obj.description}", data-loc="#{obj.location}", data-link="#{obj.link}")
         img(src='#{obj.image}')
         h5=obj.title

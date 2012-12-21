@@ -22,6 +22,13 @@ Entry = Backbone.Model.extend({
   }
 
   initialize: (attrs) ->
+    @.on 'over', @.over
+    @.on 'pushed', @.pushed
+    @.on 'pulled', @.pulled
+    @.on 'change:x', @.updateX
+    @.on 'change:y', @.updateY
+    @.on 'change:width', @.updateWidth
+    @.on 'change:el', @.updateEl
     @.set {
       width: attrs.width0
       height: attrs.height0
@@ -30,13 +37,17 @@ Entry = Backbone.Model.extend({
       el: attrs.el
     }
     @.setCorners()
-    @.on 'over', @.over
-    @.on 'pushed', @.pushed
-    @.on 'pulled', @.pulled
-    @.on 'change:x', @updateX
-    @.on 'change:y', @updateY
-    @.on 'change:width', @updateWidth
+    @.updateEl()
     console.log "im such a drag..." 
+
+  updateEl: ->
+    me = @.attributes
+    @.set {
+      title: me.el.data 'title'
+      desc: me.el.data 'desc'
+      loc: me.el.data 'loc'
+      link: me.el.data 'link'
+    }
 
   updateX: ->
     me = @.attributes
