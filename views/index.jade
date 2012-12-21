@@ -20,8 +20,12 @@ block content
       /*background-color: #f00;*/
       background-image: url('/img/hand-right.svg');
     }
+    #gallery{
+      position: relative;
+      opacity: .4;
+    }
     .obj{
-      position: fixed;
+      position: absolute;
       top: 150px;
       left: 200px;
       width: 200px;
@@ -52,15 +56,30 @@ block content
       opacity: 1;
       z-index: 10;
     }
-  h1= title
-  h4 Current user status: <span id='status'>---</span>
+    .tut {
+      diplsay: none;
+      z-index: 20;
+    }
+  .row
+    .span3
+      h1= title
+      h4 Current user status: <span id='status'>---</span>
+    .span4
+      #tut
+        video(id='tut-video', width='400', height='300')
+          source(src='/videos/tut.m4v')
+        #ended.hide
+          h3 Now grab this box to start!
 
   #play
     #leftCursor.hand
     #rightCursor.hand
 
-  #gallery
-    for obj in objects
-      .grabbable.obj.span3.offset1(data-title="#{obj.title}", data-desc="#{obj.description}", data-loc="#{obj.location}", data-link="#{obj.link}")
-        img(src='#{obj.image}')
-        h5=obj.title
+  .row
+    #gallery
+      for obj in objects
+        .grabbable.obj.span3.offset1(data-title="#{obj.title}", data-desc="#{obj.description}", data-loc="#{obj.location}", data-link="#{obj.link}")
+          img(src='#{obj.image}')
+          h5=obj.title
+
+  include signInModal 

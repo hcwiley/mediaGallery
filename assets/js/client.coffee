@@ -2,6 +2,8 @@
 #= require jquery.validate
 #= require underscore
 # =require backbone
+#= require bootstrapManifest
+#= require baseClasses
 # =require socket.io
 # =require osc.io
 # =require helpers
@@ -23,7 +25,7 @@
   $(".grabbable").each ->
     me = $(@)
     me.css 'left', (me.index() % 4) * ( me.width() + parseInt(me.css('margin-left').replace('px','')) )+ 100
-    me.css 'top', (parseInt(me.index() / 4) * 400) + 200
+    me.css 'top', (parseInt(me.index() / 4) * 400) 
     me.animate {
       opacity: 1
     }, 500
@@ -34,7 +36,7 @@
       height0: h0
       x0: $(me).position().left,
       y0: $(me).position().top,
-      el: $(me)
+      el: $(me),
     }
     a.entries.add entry
     # lets bind some mouse events to trigger kinect driven events
@@ -47,7 +49,19 @@
     ).mouseup ->
       entry.trigger 'pulled'
 
+@startTutorial = ->
+  $('#tut').show()
+  vid = document.getElementById 'tut-video'
+  vid.play()
+
 $(window).ready ->
+  $('#signInModal .submit').click (e) ->
+    e.preventDefault()
+    $.post '/email', $(@).parent('form').serialize(), (data) ->
+      $('#signInModal').modal 'hide'
+      startTutorial()
+      console.log data
+  $('#signInModal').modal 'show'
   console.log "lets do it"
   socket = io.connect "http://localhost" 
   osc_client = new OscClient {

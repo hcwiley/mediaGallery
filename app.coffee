@@ -92,6 +92,11 @@ app.get "/", (req, res) ->
       title: "Media Gallery"
       objects: entries
 
+app.post '/email', (req, res) ->
+  email = req.body.email
+  console.log "got email: #{email}"
+  res.end "thanks: #{email}"
+
 
 server.listen app.get("port"), ->
   console.log "Express server listening on port " + app.get("port")
