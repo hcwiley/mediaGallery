@@ -2,6 +2,7 @@
   "name"      : "mediaGallery",
   "version"   : "0.0.1",
   "dependencies": {
+    "coffee-script"         : "1.4.0",
     "express"               : "3.0.3",
     "connect-assets"        : "2.2.1",
     "cookie"                : "0.0.4",
