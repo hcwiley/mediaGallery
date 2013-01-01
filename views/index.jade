@@ -1,8 +1,8 @@
 extends layout
 
 block content
-  .row
-    .span3
+  .title
+    .span3.offset2
       h1= title
       h4 Current user status: <span id='status'>---</span>
 
@@ -10,16 +10,23 @@ block content
     #leftCursor.hand
     #rightCursor.hand
 
-  .row
-    #tut.grabbable
-      video(id='tut-video', width='400', height='300')
-        source(src='/videos/tut-1.m4v')
-      #ended.hide
-        h3.text Now grab this box to start!
-    #gallery
-      for obj in objects
-        .grabbable.obj.span3.offset1(data-title="#{obj.title}", data-desc="#{obj.description}", data-loc="#{obj.location}", data-link="#{obj.link}")
-          img(src='#{obj.image}')
-          h5=obj.title
+  #tut.grabbable
+    video(id='tut-video', width='400', height='300')
+      source(src='/videos/tut-1.m4v')
+    #ended.hide
+      h3.text Now grab this box to start!
+  #gallery
+    #email.drop
+      .icon
+    #events.corner
+      .icon
+    #food.corner
+      .icon
+    #drink.corner
+      .icon
+    for obj in objects
+      .grabbable.obj.span3.offset1(data-title="#{obj.title}", data-desc="#{obj.description}", data-loc="#{obj.location}", data-link="#{obj.link}")
+        img(src='#{obj.image}')
+        h5=obj.title
 
   include signInModal 

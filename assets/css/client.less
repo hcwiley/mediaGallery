@@ -1,23 +1,8 @@
 @import "bootstrap/bootstrap";
 
-body {
-  padding-top: 60px;
-  padding-bottom: 40px;
-  &.userNotFetched {
-    .withoutUser, .withUser {
-      display: none;
-    }
-  }
-  &.hasUser {
-    .withoutUser {
-      display: none;
-    }
-  }
-  &.noUser {
-    .withUser {
-      display: none;
-    }
-  }
+html, body {
+  width: 100%;
+  height: 100%;
 }
 
 @import "bootstrap/responsive";
@@ -25,7 +10,7 @@ body {
 .hand{
   width: 20px;
   height: 20px;
-  position: fixed;
+  position: absolute;
   left: 0px;
   top: 300px;
   -o-background-size: 100% 100%;
@@ -42,13 +27,25 @@ body {
   background-image: url('/img/hand-right.svg');
 }
 
+#main{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 #gallery{
-  position: relative;
+  position: absolute;
+  top: 0px;
+  left: 0px;
   display: block;
   visibility: hidden;
   opacity: 0;
   width: 100%;
   height: 100%;
+  border: 1px solid #000;
 }
 
 .obj{
@@ -109,3 +106,106 @@ body {
  height: 30px;
  margin: 120px auto;   
 }
+
+#email {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  width: 0px;
+  height: 0px;
+  overflow: visible;
+  border-bottom: 0px solid transparent;  /* left arrow slant */
+  border-top: 155px solid transparent; /* right arrow slant */
+  border-left: 155px solid #dedede;
+  .icon {
+    position: relative;
+    width: 80px;
+    height: 55px;
+    top: -60px;
+    left: -150px;
+    background-image: url('/img/email.svg');
+    background-repeat: no-repeat;
+    background-position: -10px -20px;
+    background-color: rgba(255,255,255,0);
+  }
+}
+
+#events {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 0px;
+  height: 0px;
+  overflow: visible;
+  border-bottom: 155px solid transparent;
+  /* left arrow slant */
+
+  border-top: 0px solid transparent;
+  /* right arrow slant */
+
+  border-left: 155px solid #dedede;
+}
+#events .icon {
+  position: relative;
+  width: 80px;
+  height: 65px;
+  top: 10px;
+  left: -145px;
+  background-image: url('/img/events.svg');
+  background-repeat: no-repeat;
+  background-position: -10px -20px;
+  background-color: rgba(255, 255, 255, 0);
+}
+#food {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  width: 0px;
+  height: 0px;
+  overflow: visible;
+  border-bottom: 0px solid transparent;
+  /* left arrow slant */
+
+  border-top: 155px solid transparent;
+  /* right arrow slant */
+
+  border-right: 155px solid #dedede;
+}
+#food .icon {
+  position: relative;
+  width: 125px;
+  height: 95px;
+  top: -90px;
+  left: 45px;
+  background-image: url('/img/food.svg');
+  background-repeat: no-repeat;
+  background-position: 0px 0px;
+  background-color: rgba(255, 255, 255, 0);
+}
+#drink {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 0px;
+  height: 0px;
+  overflow: visible;
+  border-bottom: 155px solid transparent;
+  /* left arrow slant */
+
+  border-top: 0px solid transparent;
+  /* right arrow slant */
+
+  border-right: 155px solid #dedede;
+}
+#drink .icon {
+  position: relative;
+  width: 90px;
+  height: 95px;
+  top: -5px;
+  left: 65px;
+  background-image: url('/img/drink.svg');
+  background-repeat: no-repeat;
+  background-position: 0px 0px;
+  background-color: rgba(255, 255, 255, 0);
+}
+

@@ -27,7 +27,7 @@
     me = $(@)
     if me.hasClass('obj')
       me.css 'left', (me.index() % 4) * ( me.width() + 40 )+ 100
-      me.css 'top', (parseInt(me.index() / 4) * 400) 
+      me.css 'top', (parseInt(me.index() / 4) * 400) - 250 
       me.animate {
         opacity: 1
       }, 500
@@ -77,6 +77,14 @@
     )
 
 $(window).ready ->
+  # lets make some shit grabbable
+  initGrabbale()
+   
+  a.user = new User({
+    leftCursor: $('#leftCursor'),
+    rightCursor: $('#rightCursor')
+  })
+
   $('#signInModal .submit').click (e) ->
     e.preventDefault()
     $.post '/email', $(@).parent('form').serialize(), (data) ->
@@ -89,8 +97,11 @@ $(window).ready ->
       $('#email').val('foo@bar.com')
       setTimeout ->
         $('.submit').trigger 'click'
-      , 800
-    , 700
+        setTimeout ->
+          a.entries.models[0].grab()
+        , 1500
+      , 500
+    , 500
   # set up the socket.io and OSC
   socket = io.connect "http://localhost" 
   osc_client = new OscClient {
@@ -101,14 +112,6 @@ $(window).ready ->
     host: "127.0.0.1"
     port: 7655
   }
-
-  # lets make some shit grabbable
-  initGrabbale()
-   
-  a.user = new User({
-    leftCursor: $('#leftCursor'),
-    rightCursor: $('#rightCursor')
-  })
 
   osc_server.on "osc",  (msg)  ->
     data = JSON.parse msg.path 
