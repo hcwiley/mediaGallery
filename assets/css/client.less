@@ -7,10 +7,13 @@ html, body {
 
 @import "bootstrap/responsive";
 
+@lightGray:#dedede;
+@hoverColor:#ebb;
+
 .hand{
   width: 20px;
   height: 20px;
-  position: absolute;
+  position: fixed;
   left: 0px;
   top: 300px;
   -o-background-size: 100% 100%;
@@ -38,24 +41,26 @@ html, body {
 
 #gallery{
   position: absolute;
-  top: 0px;
+  top: 100px;
   left: 0px;
   display: block;
   visibility: hidden;
   opacity: 0;
   width: 100%;
   height: 100%;
-  border: 1px solid #000;
+  /*border: 1px solid #000;*/
+  background: #fff;
+  z-index:1;
 }
 
 .obj{
-  position: absolute;
-  top: 150px;
-  left: 200px;
+  position: relative;
+  /*top: 150px;*/
+  /*left: 200px;*/
   width: 200px;
   height: 300px;
   z-index: 1;
-  opacity: 0;
+  /*opacity: 0;*/
   border: 1px solid #000;
   margin: 20px 40px;
 }
@@ -107,8 +112,17 @@ html, body {
  margin: 120px auto;   
 }
 
-#email {
-  position: absolute;
+.corner, .drop {
+  visibility: hidden;
+  position: fixed;
+  z-index: 10;
+}
+
+.icon {
+  position: relative;
+}
+
+#email-drop {
   left: 0px;
   bottom: 0px;
   width: 0px;
@@ -116,9 +130,9 @@ html, body {
   overflow: visible;
   border-bottom: 0px solid transparent;  /* left arrow slant */
   border-top: 155px solid transparent; /* right arrow slant */
-  border-left: 155px solid #dedede;
-  .icon {
-    position: relative;
+  border-left: 155px solid @lightGray;
+}
+#email-drop .icon {
     width: 80px;
     height: 55px;
     top: -60px;
@@ -127,55 +141,42 @@ html, body {
     background-repeat: no-repeat;
     background-position: -10px -20px;
     background-color: rgba(255,255,255,0);
-  }
 }
 
-#events {
-  position: absolute;
+#event {
   left: 0px;
   top: 0px;
   width: 0px;
   height: 0px;
   overflow: visible;
   border-bottom: 155px solid transparent;
-  /* left arrow slant */
-
   border-top: 0px solid transparent;
-  /* right arrow slant */
-
-  border-left: 155px solid #dedede;
+  border-left: 155px solid @lightGray;
 }
-#events .icon {
-  position: relative;
+#event .icon {
   width: 80px;
   height: 65px;
   top: 10px;
   left: -145px;
-  background-image: url('/img/events.svg');
+  background-image: url('/img/event.svg');
   background-repeat: no-repeat;
   background-position: -10px -20px;
   background-color: rgba(255, 255, 255, 0);
 }
 #food {
-  position: absolute;
   right: 0px;
   bottom: 0px;
   width: 0px;
   height: 0px;
   overflow: visible;
   border-bottom: 0px solid transparent;
-  /* left arrow slant */
-
   border-top: 155px solid transparent;
-  /* right arrow slant */
-
-  border-right: 155px solid #dedede;
+  border-right: 155px solid @lightGray;
 }
 #food .icon {
-  position: relative;
   width: 125px;
   height: 95px;
-  top: -90px;
+  top: -95px;
   left: 45px;
   background-image: url('/img/food.svg');
   background-repeat: no-repeat;
@@ -183,22 +184,16 @@ html, body {
   background-color: rgba(255, 255, 255, 0);
 }
 #drink {
-  position: absolute;
   right: 0px;
   top: 0px;
   width: 0px;
   height: 0px;
   overflow: visible;
   border-bottom: 155px solid transparent;
-  /* left arrow slant */
-
   border-top: 0px solid transparent;
-  /* right arrow slant */
-
-  border-right: 155px solid #dedede;
+  border-right: 155px solid @lightGray;
 }
 #drink .icon {
-  position: relative;
   width: 90px;
   height: 95px;
   top: -5px;
@@ -209,3 +204,32 @@ html, body {
   background-color: rgba(255, 255, 255, 0);
 }
 
+#email.corner.over {
+  .icon{
+    background-image: url('/img/email-over.svg');
+  }
+}
+
+#event.corner.over {
+  .icon{
+    background-image: url('/img/event-over.svg');
+  }
+}
+
+#drink.corner.over {
+  .icon{
+    background-image: url('/img/drink-over.svg');
+  }
+}
+
+#food.corner.over {
+  .icon{
+    background-image: url('/img/food-over.svg');
+  }
+}
+
+#food.corner.over {
+  .icon{
+    background-image: url('/img/food-over.svg');
+  }
+}
