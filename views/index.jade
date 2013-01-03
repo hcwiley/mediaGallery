@@ -2,9 +2,8 @@ extends layout
 
 block content
   .title
-    .span3.offset2
-      h1= title
-      h4 Current user status: <span id='status'>---</span>
+    .span5.offset2
+      h3 Current user status: <span id='status'>---</span>
 
   #play
     #leftCursor.hand
@@ -13,20 +12,23 @@ block content
   #tut.grabbable
     video(id='tut-video', width='400', height='300')
       source(src='/videos/tut-1.m4v')
-    #ended.hide
-      h3.text Now grab this box to start!
+  #ended.hide
+    h3.text Now grab this box to start!
+  #email-drop.drop.bottom.left
+    .icon
+  #event.corner.top.left(data-gallery='ART')
+    .icon
+  #food.corner.bottom.right(data-gallery='F&D')
+    .icon
+  #drink.corner.top.right(data-gallery='OR')
+    .icon
   #gallery
-    #email.drop
-      .icon
-    #events.corner
-      .icon
-    #food.corner
-      .icon
-    #drink.corner
-      .icon
-    for obj in objects
-      .grabbable.obj.span3.offset1(data-title="#{obj.title}", data-desc="#{obj.description}", data-loc="#{obj.location}", data-link="#{obj.link}")
-        img(src='#{obj.image}')
-        h5=obj.title
+    h2 Select a category to get started
 
-  include signInModal 
+  include signInModal
+
+  script(type="text/template",id="gallery-template")
+    <div class='grabbable obj span3 offset1'>
+    <img src="<%= image %>"/>
+    <h5><%= title %></h5>
+    </div>
