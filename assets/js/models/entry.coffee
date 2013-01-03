@@ -1,8 +1,9 @@
 #= require ../underscore
 # =require ../backbone
 # =require ../jquery
+# =require ../views/gallery
 
-Entry = Backbone.Model.extend({
+Grabbable = Backbone.Model.extend({
   defaults: {
     width: 0,
     height: 0,
@@ -14,6 +15,7 @@ Entry = Backbone.Model.extend({
     y0: 0,
     data: {},
     isGrabbed: false,
+    isGrabbable: true,
     el: "",
     left: 0,
     right: 0,
@@ -30,24 +32,24 @@ Entry = Backbone.Model.extend({
     @.on 'change:width', @.updateWidth
     @.on 'change:el', @.updateEl
     @.set {
-      width: attrs.width0
-      height: attrs.height0
       x: attrs.x0
       y: attrs.y0
       el: attrs.el
     }
+    @.attributes.width= attrs.width0
+    @.attributes.height= attrs.height0
     @.setCorners()
     @.updateEl()
     console.log "im such a drag..." 
 
   updateEl: ->
     me = @.attributes
-    @.set {
-      title: me.el.data 'title'
-      desc: me.el.data 'desc'
-      loc: me.el.data 'loc'
-      link: me.el.data 'link'
-    }
+    #@.set {
+      #title: me.el.data 'title'
+      #desc: me.el.data 'desc'
+      #loc: me.el.data 'loc'
+      #link: me.el.data 'link'
+    #}
 
   updateX: ->
     me = @.attributes
@@ -96,13 +98,14 @@ Entry = Backbone.Model.extend({
 
   checkOver: (hand) ->
     me = @.attributes
-    if hand
+    if hand && me.isGrabbable
       if @.inMyBoundingBox hand
           return @.trigger 'over'
     me.el.removeClass 'over' 
 
   over: ->
     me = @.attributes
+    console.log "over my dead body"
     me.el.addClass 'over'
 
   pushed: ->
@@ -145,4 +148,46 @@ Entry = Backbone.Model.extend({
 
 })
 
+
+Entry = Grabbable.extend()
+
+CornerEntry = Grabbable.extend({
+  initialize: (attrs) ->
+    @.on 'over', @.over
+    @.on 'pushed', @.pushed
+    @.on 'pulled', @.pulled
+    @.on 'change:x', @.updateX
+    @.on 'change:y', @.updateY
+    @.on 'change:el', @.updateEl
+    @.set {
+      width: attrs.width0
+      height: attrs.height0
+      x: attrs.x0
+      y: attrs.y0
+      el: attrs.el
+      gallery: attrs.el.data 'gallery'
+    }
+    @.setCorners()
+    @.updateEl()
+    console.log "corner stone..." 
+
+  grab: (hand) ->
+    me = @.attributes
+    a.grabbed = {
+      entry: @,
+      hand: hand
+    }
+    a.entries.notGrabbed @
+    a.lastGrabbed = false
+    me.el.addClass 'grabbed'
+    console.log "youve cornered me?: #{me.el.index()}"
+
+    d = $("#gallery")
+    g_view = new GalleryView { el:d, objs: a.galleries["#{me.gallery}"] }
+
+    @.trigger 'wasGrabbed'
+
+})
+@Grabbable = Grabbable
+@CornerEntry = CornerEntry
 @Entry = Entry

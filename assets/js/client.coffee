@@ -10,6 +10,7 @@
 # =require models/user
 # =require models/entry
 # =require collections/entries
+# =require views/gallery
 
 @a = @a || {}
 
@@ -22,12 +23,13 @@
 @a.pushed = {}
 
 @initGrabbale = ->
-  a.entries = new Entries()
+  a.entries = new Grabbables()
+  a.grabbables = new Grabbables()
   $(".grabbable").each ->
     me = $(@)
     if me.hasClass('obj')
       me.css 'left', (me.index() % 4) * ( me.width() + 40 )+ 100
-      me.css 'top', (parseInt(me.index() / 4) * 400) - 250 
+      me.css 'top', (parseInt(me.index() / 4) * 400) - 50 
       me.animate {
         opacity: 1
       }, 500
@@ -41,6 +43,7 @@
       el: $(me),
     }
     a.entries.add entry
+    a.grabbables.add entry
     # lets bind some mouse events to trigger kinect driven events
     $(me).mouseover(->
       entry.trigger 'over'
@@ -60,12 +63,66 @@
           me.animate({
             opacity: 0
           }, 700, ->
-            me.remove()
+            me.css 'display', 'none'
+            entry.set { isGrabbable: false }
             $('#gallery').css('visibility', 'visible').animate({
               opacity: 1
             }, 600)
+            $('.corner,.drop').css('visibility', 'visible')
           )
         , 1500
+
+@initCorners = ->
+  a.corners = new Grabbables()
+  a.grabbables = a.grabbables || new Grabbables()
+
+  # need to update corners as the window resizes
+  #$(window).resize ->
+  ww = $(window).width()
+  wh = $(window).height()
+  dW = 150
+  dH = 150
+
+  d = $('.bottom.right')
+  d.css 'top', wh - dH + "px"
+  d.css 'left', ww - dW + "px"
+
+  d = $('.bottom.left')
+  d.css 'top', wh - dH + "px"
+  d.css 'left', 0 + "px"
+
+  d = $('.top.right')
+  d.css 'top', 0 + "px"
+  d.css 'left', ww - dW + "px"
+
+  d = $('.top.left')
+  d.css 'top', 0 + "px"
+  d.css 'left', 0 + "px"
+
+
+  $('.corner').each ->
+    me = $(@)
+    w0 = 150
+    h0 = 150
+    corner = new CornerEntry {
+      width0: w0,
+      height0: h0
+      x0: $(me).position().left,
+      y0: $(me).position().top,
+      el: $(me),
+    }
+    a.grabbables.add corner
+    a.corners.add corner
+    $(me).mouseover(->
+      corner.trigger 'over'
+    ).mouseleave( ->
+      corner.checkOver()
+    ).mousedown(->
+      corner.trigger 'pushed'
+    ).mouseup ->
+      corner.trigger 'pulled'
+
+
 
 @startTutorial = ->
   $('#tut').show()
@@ -76,9 +133,20 @@
       $('#ended').show()
     )
 
+@populateGalleries = ->
+  a.galleries =  a.galleries || {}
+  $.get '/galleries', (data) ->
+    for gallery in data
+      a.galleries[gallery.type] = a.galleries[gallery.type] || []
+      a.galleries[gallery.type].push gallery
+
 $(window).ready ->
   # lets make some shit grabbable
   initGrabbale()
+
+  initCorners()
+  
+  populateGalleries()
    
   a.user = new User({
     leftCursor: $('#leftCursor'),
@@ -99,9 +167,9 @@ $(window).ready ->
         $('.submit').trigger 'click'
         setTimeout ->
           a.entries.models[0].grab()
-        , 1500
-      , 500
-    , 500
+        , 500
+      , 200
+    , 200
   # set up the socket.io and OSC
   socket = io.connect "http://localhost" 
   osc_client = new OscClient {

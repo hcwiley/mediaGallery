@@ -23,7 +23,7 @@ Hand = Backbone.Model.extend({
       a.grabbed.entry.center @
       a.grabbed.entry.scaleTo @, me.parent.otherHand(@)
     else
-      a.entries.isOver @
+      a.grabbables.isOver @
 
   doPushCheck: ->
     me = @.attributes
@@ -35,13 +35,13 @@ Hand = Backbone.Model.extend({
     me.cursor.height scale
 
     # lets check and see if they pushed
-    pushedThresh = 70
+    pushedThresh = 60
     if push > pushedThresh
       me.cursor.addClass 'pushed'
-      a.entries.isPushed @
+      a.grabbables.isPushed @
     else
       me.cursor.removeClass 'pushed'
-      a.entries.isPulled @
+      a.grabbables.isPulled @
 
   x: ->
     @.attributes.x
@@ -77,10 +77,15 @@ User = Backbone.Model.extend({
 
   updatePosition: (data) ->
     me = @.attributes
-    data.hands.left.x = map data.hands.left.x, 0, 640, 0, $(window).width()   
-    data.hands.right.x = map data.hands.right.x, 0, 640, 0, $(window).width()   
-    data.hands.left.y = map data.hands.left.y, 0, 320, 0, $(window).height()   
-    data.hands.right.y = map data.hands.right.y, 0, 320, 0, $(window).height()   
+    # want to scale this more so its easier to hit the corners
+    wUpper = $(window).width() * 1.3
+    hUpper = $(window).height() * 1.3
+    wLower = $(window).width() - wUpper
+    hLower = $(window).height() - hUpper
+    data.hands.left.x = map data.hands.left.x, 0, 640, wLower, wUpper
+    data.hands.right.x = map data.hands.right.x, 0, 640, wLower, wUpper
+    data.hands.left.y = map data.hands.left.y, 0, 320, hLower, hUpper
+    data.hands.right.y = map data.hands.right.y, 0, 320, hLower, hUpper
     data.hands.left.z  = parseFloat data.hands.left.z
     data.hands.right.z = parseFloat data.hands.right.z
     @.set {

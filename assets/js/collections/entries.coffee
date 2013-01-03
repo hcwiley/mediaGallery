@@ -3,8 +3,8 @@
 # =require ../jquery
 # =require ../models/entry
 
-Entries = Backbone.Collection.extend({
-  model: Entry
+Grabbables = Backbone.Collection.extend({
+  model: Grabbable
   
   , isOver: (hand) ->
     @.forEach (e) ->
@@ -34,4 +34,4 @@ Entries = Backbone.Collection.extend({
 })
 
 
-@Entries = Entries
+@Grabbables = Grabbables
