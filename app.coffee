@@ -74,7 +74,10 @@ updateGallery = (next) ->
       data = data.replace /\r\n/g, " "
       data = data.replace /\n/g, " "
       data = data.replace /\r/g, " "
-      data = JSON.parse data
+      try
+        data = JSON.parse data
+      finally
+        console.log 'mer'
       #console.log data
       entries = data.entries
       for entry, key in data.entries
@@ -91,6 +94,9 @@ app.get "/", (req, res) ->
     res.render "index.jade",
       title: "Media Gallery"
       objects: entries
+
+app.get '/galleries', (req, res) ->
+  res.send entries
 
 app.post '/email', (req, res) ->
   email = req.body.email
