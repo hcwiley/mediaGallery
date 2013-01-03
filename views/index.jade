@@ -28,7 +28,7 @@ block content
   include signInModal
 
   script(type="text/template",id="gallery-template")
-    <div class='grabbable obj span3 offset1'>
+    <div class='grabbable obj' style="<%= pos %>">
     <img src="<%= image %>"/>
     <h5><%= title %></h5>
     </div>

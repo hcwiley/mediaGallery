@@ -23,8 +23,12 @@
 @a.pushed = {}
 
 @initGrabbale = ->
+  a.grabbables = a.grabbables || new Grabbables()
+  if a.entries?.length > 0
+    a.entries.each (e) ->
+      a.grabbables.remove e
+      e.destroy()
   a.entries = new Grabbables()
-  a.grabbables = new Grabbables()
   $(".grabbable").each ->
     me = $(@)
     if me.hasClass('obj')
@@ -113,6 +117,8 @@
     }
     a.grabbables.add corner
     a.corners.add corner
+    corner.on 'wasGrabbed', ->
+      initGrabbale()
     $(me).mouseover(->
       corner.trigger 'over'
     ).mouseleave( ->

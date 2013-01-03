@@ -12,9 +12,14 @@ GalleryView = Backbone.View.extend({
 
   render: ->
     html = ""
+    count = 0
     for obj in @.objs
+      vars = obj
+      vars.pos = "left: " + ( (count % 4) * ( 200 + 40 )+ 100 ) + "px;"
+      vars.pos += "top: " + ( ( (count / 4) * 400) - 250 ) + "px;"
       html += _.template $('#gallery-template').html(), obj
       console.log 'got the template'
+      count++
     
     @.$el.html html
 })

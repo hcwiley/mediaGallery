@@ -105,7 +105,7 @@ Grabbable = Backbone.Model.extend({
 
   over: ->
     me = @.attributes
-    console.log "over my dead body"
+    #console.log "over my dead body"
     me.el.addClass 'over'
 
   pushed: ->
@@ -173,10 +173,6 @@ CornerEntry = Grabbable.extend({
 
   grab: (hand) ->
     me = @.attributes
-    a.grabbed = {
-      entry: @,
-      hand: hand
-    }
     a.entries.notGrabbed @
     a.lastGrabbed = false
     me.el.addClass 'grabbed'
