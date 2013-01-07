@@ -1,9 +1,8 @@
 extends layout
 
 block content
-  .title
-    .span5.offset2
-      h3 Current user status: <span id='status'>---</span>
+  .span5.offset2
+    h3 Current user status: <span id='status'>---</span>
 
   #play
     #leftCursor.hand
@@ -14,7 +13,7 @@ block content
       source(src='/videos/tut-1.m4v')
   #ended.hide
     h3.text Now grab this box to start!
-  #email-drop.drop.bottom.left
+  #show.corner.bottom.left(data-gallery='VEN')
     .icon
   #event.corner.top.left(data-gallery='ART')
     .icon
@@ -22,6 +21,16 @@ block content
     .icon
   #drink.corner.top.right(data-gallery='OR')
     .icon
+  #email-drop.drop
+    h3 email me this
+    .icon
+  #info
+    h3.title
+      Some title...
+    p.desc
+      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi commodo, ipsum sed pharetra gravida, orci magna rhoncus neque, id pulvinar odio lorem non turpis. Nullam sit amet enim.
+    img.map
+      
   #gallery
     h2 Select a category to get started
 

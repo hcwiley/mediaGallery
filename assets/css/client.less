@@ -123,22 +123,27 @@ html, body {
 }
 
 #email-drop {
-  width: 0px;
-  height: 0px;
+  position:fixed;
+  /*display: none;*/
+  left: 45%;
+  top: 150%;
+  width: 200px;
+  height: 150px;
   overflow: visible;
-  border-bottom: 0px solid transparent;  /* left arrow slant */
-  border-top: 155px solid transparent; /* right arrow slant */
-  border-left: 155px solid @lightGray;
+  background-color: #dedede;
+  text-align: center;
+  font-variant: small-caps;
 }
 #email-drop .icon {
-    width: 80px;
-    height: 55px;
-    top: -60px;
-    left: -150px;
-    background-image: url('/img/email.svg');
-    background-repeat: no-repeat;
-    background-position: -10px -20px;
-    background-color: rgba(255,255,255,0);
+  position: absolute;
+  width: 80px;
+  height: 55px;
+  top: 70px;
+  left: 60px;
+  background-image: url('/img/email.svg');
+  background-repeat: no-repeat;
+  background-position: -10px -20px;
+  background-color: rgba(255, 255, 255, 0);
 }
 
 #event {
@@ -152,9 +157,27 @@ html, body {
 #event .icon {
   width: 80px;
   height: 65px;
-  top: 10px;
+  top: 0px;
   left: -145px;
   background-image: url('/img/event.svg');
+  background-repeat: no-repeat;
+  background-position: -10px -20px;
+  background-color: rgba(255, 255, 255, 0);
+}
+#show {
+  width: 0px;
+  height: 0px;
+  overflow: visible;
+  border-bottom: 0px solid transparent;  /* left arrow slant */
+  border-top: 155px solid transparent; /* right arrow slant */
+  border-left: 155px solid @lightGray;
+}
+#show .icon {
+  width: 80px;
+  height: 65px;
+  top: -75px;
+  left: -145px;
+  background-image: url('/img/show.svg');
   background-repeat: no-repeat;
   background-position: -10px -20px;
   background-color: rgba(255, 255, 255, 0);
@@ -208,6 +231,12 @@ html, body {
   }
 }
 
+#show.corner.over {
+  .icon{
+    background-image: url('/img/show-over.svg');
+  }
+}
+
 #drink.corner.over {
   .icon{
     background-image: url('/img/drink-over.svg');
@@ -223,5 +252,25 @@ html, body {
 #food.corner.over {
   .icon{
     background-image: url('/img/food-over.svg');
+  }
+}
+
+#info{
+  width: 80%;
+  height: 120px;
+  position: fixed;
+  top: -500px;
+  left: 10%;
+  background-color: #ccc;
+  z-index: 2;
+  padding-top: 10px;
+  padding-left: 20px;
+  p{
+    font-size: 14px;
+  }
+  img.map {
+    position: absolute;
+    right: 20px;
+    top: 10px;
   }
 }

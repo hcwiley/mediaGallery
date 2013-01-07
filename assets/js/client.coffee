@@ -33,7 +33,7 @@
     me = $(@)
     if me.hasClass('obj')
       me.css 'left', (me.index() % 4) * ( me.width() + 40 )+ 100
-      me.css 'top', (parseInt(me.index() / 4) * 400) - 50 
+      me.css 'top', (parseInt(me.index() / 4) * 400) + 20 
       me.animate {
         opacity: 1
       }, 500
@@ -127,6 +127,24 @@
       corner.trigger 'pushed'
     ).mouseup ->
       corner.trigger 'pulled'
+
+@doGrabAnimations = ->
+  $('#info').animate {
+    top: '0',
+  }, 500
+  $('.corner').fadeOut(500)
+  $('#email-drop').animate({
+    top: '80%',
+  }, 500)
+
+@doDropAnimations = ->
+  $('#info').animate {
+    top: '-500',
+  }, 500
+  $('.corner').fadeIn(500)
+  $('#email-drop').animate({
+    top: '150%',
+  }, 500)
 
 
 

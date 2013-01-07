@@ -44,12 +44,13 @@ Grabbable = Backbone.Model.extend({
 
   updateEl: ->
     me = @.attributes
-    #@.set {
-      #title: me.el.data 'title'
-      #desc: me.el.data 'desc'
-      #loc: me.el.data 'loc'
-      #link: me.el.data 'link'
-    #}
+    if me.el.data 'data'
+      @.set {
+        title: me.el.data('data').title
+        desc: me.el.data('data').description
+        loc: me.el.data('data').location
+        #link: me.el.data ('data').link
+      }
 
   updateX: ->
     me = @.attributes
@@ -130,6 +131,11 @@ Grabbable = Backbone.Model.extend({
     a.lastGrabbed = false
     me.el.addClass 'grabbed'
     console.log "you grabbing me?: #{me.el.index()}"
+    $('#info .title').text me.title
+    $('#info .desc').text me.desc
+    if me.title
+      doGrabAnimations()
+      $('#info img.map').attr('src', 'http://maps.googleapis.com/maps/api/staticmap?center='+me.loc+', New Orleans,LA&markers=color:blue%7Clabel:S%7C'+me.loc+', New Orleans,LA&zoom=16&size=500x250&sensor=false');
     @.trigger 'wasGrabbed'
 
   drop: ->
@@ -139,6 +145,7 @@ Grabbable = Backbone.Model.extend({
     me.el.removeClass 'grabbed'
     a.entries.reset()
     console.log "you dropped me!: #{me.el.index()}"
+    doDropAnimations()
     @.trigger 'wasDropped'
 
   reset: ->
