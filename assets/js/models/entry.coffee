@@ -36,8 +36,8 @@ Grabbable = Backbone.Model.extend({
       y: attrs.y0
       el: attrs.el
     }
-    @.attributes.width= attrs.width0
-    @.attributes.height= attrs.height0
+    @.attributes.width = attrs.width0
+    @.attributes.height = attrs.height0
     @.setCorners()
     @.updateEl()
     console.log "im such a drag..." 

@@ -17,11 +17,12 @@ Hand = Backbone.Model.extend({
 
   moved: ->
     me = @.attributes
-    me.cursor.css 'left', me.x
-    me.cursor.css 'top', me.y
+    me.cursor.css 'left', me.x - me.cursor.width() / 2
+    me.cursor.css 'top', me.y - me.cursor.height() / 2
     if a.grabbed?.hand == @
       a.grabbed.entry.center @
       a.grabbed.entry.scaleTo @, me.parent.otherHand(@)
+      a.emailDrop?.checkOver a.grabbed.entry
     else
       a.grabbables.isOver @
 

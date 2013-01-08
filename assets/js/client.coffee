@@ -9,6 +9,7 @@
 # =require helpers
 # =require models/user
 # =require models/entry
+# =require models/dropzone
 # =require collections/entries
 # =require views/gallery
 
@@ -25,9 +26,12 @@
 @initGrabbale = ->
   a.grabbables = a.grabbables || new Grabbables()
   if a.entries?.length > 0
-    a.entries.each (e) ->
-      a.grabbables.remove e
-      e.destroy()
+    for e in a.entries.models
+      i = a.grabbables.indexOf e
+      if i > 0
+        a.grabbables.remove(i)
+        e.destroy()
+        _i--
   a.entries = new Grabbables()
   $(".grabbable").each ->
     me = $(@)
@@ -72,7 +76,7 @@
             $('#gallery').css('visibility', 'visible').animate({
               opacity: 1
             }, 600)
-            $('.corner,.drop').css('visibility', 'visible')
+            $('.corner, .drop').css('visibility', 'visible')
           )
         , 1500
 
@@ -110,7 +114,7 @@
     h0 = 150
     corner = new CornerEntry {
       width0: w0,
-      height0: h0
+      height0: h0,
       x0: $(me).position().left,
       y0: $(me).position().top,
       el: $(me),
@@ -128,6 +132,21 @@
     ).mouseup ->
       corner.trigger 'pulled'
 
+@initEmailDrop = ->
+  me = $('#email-drop')
+  w0 = $(me).width()
+  h0 = $(me).height()
+  a.emailDrop = new DropZone {
+    width0: w0,
+    height0: h0,
+    x0: $(window).width() / 2 - $(me).width() / 2,
+    y0: $(me).position().top,
+    el: $(me),
+  }
+  a.emailDrop.set {
+    x: $(window).width() / 2 - $(me).width() / 2,
+  }
+
 @doGrabAnimations = ->
   $('#info').animate {
     top: '0',
@@ -135,7 +154,12 @@
   $('.corner').fadeOut(500)
   $('#email-drop').animate({
     top: '80%',
-  }, 500)
+  }, 500, ->
+    me = $('#email-drop')
+    a.emailDrop?.set {
+      y: $(me).position().top,
+    }
+  )
 
 @doDropAnimations = ->
   $('#info').animate {
@@ -144,9 +168,12 @@
   $('.corner').fadeIn(500)
   $('#email-drop').animate({
     top: '150%',
-  }, 500)
-
-
+  }, 500, ->
+    me = $('#email-drop')
+    a.emailDrop?.set {
+      y: $(me).position().top,
+    }
+  )
 
 @startTutorial = ->
   $('#tut').show()
@@ -171,6 +198,8 @@ $(window).ready ->
   initCorners()
   
   populateGalleries()
+  
+  initEmailDrop()
    
   a.user = new User({
     leftCursor: $('#leftCursor'),

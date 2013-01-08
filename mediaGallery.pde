@@ -138,7 +138,7 @@ void sendHands(){
 }
 
 void lerpHands(){
-  float lerpAmt = .7;
+  float lerpAmt = .8;
   PVector tmpL = new PVector(leftHand.x, leftHand.y, leftHand.z);
   PVector tmpR = new PVector(rightHand.x, rightHand.y, rightHand.z);
   tmpL.x  = lerp(tmpL.x, pleftHand.x, lerpAmt);
