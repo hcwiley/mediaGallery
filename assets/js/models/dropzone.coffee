@@ -80,7 +80,7 @@ DropZone = Backbone.Model.extend({
   inMyBoundingBox: (entry) ->
     me = @.attributes
     them = entry?.attributes
-    $('#status-box').html("<h1>#{me.left}, #{me.right}<br>#{them.left}, #{them.right}</h1>")
+    #$('#status-box').html("<h1>#{me.left}, #{me.right}<br>#{them.left}, #{them.right}</h1>")
     if ( them?.left > me?.left && them?.left < me?.right ) || ( them?.right > me?.left && them?.right < me?.right )
       if ( them?.bottom > me.top && them?.top < me?.bottom ) || ( them?.top > me.top && them?.bottom < me?.bottom )
         return true

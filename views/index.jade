@@ -1,8 +1,8 @@
 extends layout
 
 block content
-  #status-box.span5
-    h3 Current user status: <span id='status'>---</span>
+  //-#status-box.span5
+    //-h3 Current user status: <span id='status'>---</span>
 
   #play
     #leftCursor.hand
@@ -13,22 +13,31 @@ block content
       source(src='/videos/tut-1.m4v')
   #ended.hide
     h3.text Now grab this box to start!
-  #show.corner.bottom.left(data-gallery='VEN')
+  #show.corner.bottom.left(data-gallery='EVENT')
     .icon
   #event.corner.top.left(data-gallery='ART')
     .icon
-  #food.corner.bottom.right(data-gallery='F&D')
+  #food.corner.bottom.right(data-gallery='FOOD')
     .icon
-  #drink.corner.top.right(data-gallery='OR')
+  #drink.corner.top.right(data-gallery='DRINK')
     .icon
   #email-drop.drop
     h3 email me this
     .icon
+  #return-drop.drop
+    h3 go back
+    .icon
   #info
-    h3.title
-      Some title...
-    p.desc
-      Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi commodo, ipsum sed pharetra gravida, orci magna rhoncus neque, id pulvinar odio lorem non turpis. Nullam sit amet enim.
+    .left
+      h2.title
+        Some title...
+      p.desc
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi commodo, ipsum sed pharetra gravida, orci magna rhoncus neque, id pulvinar odio lorem non turpis. Nullam sit amet enim.
+      .date-time
+        h5.date Date:
+        p.date
+        h5.time Start time:
+        p.time
     img.map
       
   #gallery

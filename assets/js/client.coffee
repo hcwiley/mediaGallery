@@ -132,48 +132,74 @@
     ).mouseup ->
       corner.trigger 'pulled'
 
-@initEmailDrop = ->
-  me = $('#email-drop')
-  w0 = $(me).width()
-  h0 = $(me).height()
-  a.emailDrop = new DropZone {
-    width0: w0,
-    height0: h0,
-    x0: $(window).width() / 2 - $(me).width() / 2,
-    y0: $(me).position().top,
-    el: $(me),
-  }
-  a.emailDrop.set {
-    x: $(window).width() / 2 - $(me).width() / 2,
-  }
+@initDrops = ->
+  $('.drop').each ->
+    me = @
+    w0 = $(me).width()
+    h0 = $(me).height()
+    drop = new Drop {
+      width0: w0,
+      height0: h0,
+      x0: $(window).width() / 2 - $(me).width() / 2,
+      y0: $(me).position().top,
+      el: $(me),
+    }
+    $(me).mouseover( ->
+      drop.trigger 'over'
+    ).mouseleave( ->
+      drop.checkOver()
+    ).mousedown( ->
+      drop.trigger 'pushed'
+    ).mouseup ->
+      drop.trigger 'pulled'
 
-@doGrabAnimations = ->
+    if $(me).attr("id").match("email")
+      drop.set {
+        x: $(window).width() / 4 - $(me).width() / 2,
+      }
+      a.emailDrop = drop
+      a.emailDrop.on "wasPushed", ->
+        console.log "do email for:"
+        console.log a.grabbed.entry
+    if $(me).attr("id").match("return")
+      drop.set {
+        x: $(window).width() / 2 - $(me).width() / 2,
+      }
+      a.returnDrop = drop
+
+@doGrabAnimations = ($el) ->
   $('#info').animate {
     top: '0',
   }, 500
   $('.corner').fadeOut(500)
-  $('#email-drop').animate({
-    top: '80%',
+  $('.drop').animate({
+    top: '80%'
   }, 500, ->
-    me = $('#email-drop')
     a.emailDrop?.set {
-      y: $(me).position().top,
+      y: $('#email-drop').position().top,
+    }
+    a.returnDrop?.set {
+      y: $('#return-drop').position().top,
     }
   )
 
-@doDropAnimations = ->
+@doDropAnimations = () ->
   $('#info').animate {
-    top: '-500',
+    top: '-2500',
   }, 500
   $('.corner').fadeIn(500)
-  $('#email-drop').animate({
+  $('.drop').animate({
     top: '150%',
   }, 500, ->
     me = $('#email-drop')
     a.emailDrop?.set {
       y: $(me).position().top,
     }
+    a.returnDrop?.set {
+      y: $('#return-drop').position().top,
+    }
   )
+
 
 @startTutorial = ->
   $('#tut').show()
@@ -199,7 +225,7 @@ $(window).ready ->
   
   populateGalleries()
   
-  initEmailDrop()
+  initDrops()
    
   a.user = new User({
     leftCursor: $('#leftCursor'),

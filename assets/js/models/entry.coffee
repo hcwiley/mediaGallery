@@ -49,6 +49,8 @@ Grabbable = Backbone.Model.extend({
         title: me.el.data('data').title
         desc: me.el.data('data').description
         loc: me.el.data('data').location
+        time: me.el.data('data').time
+        date: me.el.data('data').date
         #link: me.el.data ('data').link
       }
 
@@ -111,10 +113,10 @@ Grabbable = Backbone.Model.extend({
 
   pushed: ->
     me = @.attributes
-    if a.grabbed
-      a.grabbed.entry.drop()
-    else
-      me.wasPushed = true
+    #if a.grabbed
+      #a.grabbed.entry.drop()
+    #else
+    me.wasPushed = true
 
   pulled: (hand) ->
     me = @.attributes
@@ -125,17 +127,36 @@ Grabbable = Backbone.Model.extend({
     me = @.attributes
     a.grabbed = {
       entry: @,
-      hand: hand
+      #hand: hand
     }
     a.entries.notGrabbed @
     a.lastGrabbed = false
     me.el.addClass 'grabbed'
     console.log "you grabbing me?: #{me.el.index()}"
-    $('#info .title').text me.title
-    $('#info .desc').text me.desc
     if me.title
+      $('#info .title').text me.title
+      $('#info .desc').text me.desc
       doGrabAnimations()
-      $('#info img.map').attr('src', 'http://maps.googleapis.com/maps/api/staticmap?center='+me.loc+', New Orleans,LA&markers=color:blue%7Clabel:S%7C'+me.loc+', New Orleans,LA&zoom=16&size=500x250&sensor=false');
+      me.el.animate {
+        left: 170,
+        top: 50,
+        width: 400,
+        height: 400
+      }, 400
+      if me.date
+        $("#info .date").show()
+        $('#info p.date').text me.date
+      else
+        $("#info .date").hide()
+      if me.time
+        $("#info .time").show()
+        $('#info p.time').text me.time
+      else
+        $("#info .time").hide()
+
+      width = 550
+      height = 500
+      $('#info img.map').attr('src', "http://maps.googleapis.com/maps/api/staticmap?center=#{me.loc}, New Orleans,LA&markers=color:blue%7Clabel:S%7C#{me.loc}, New Orleans,LA&zoom=16&size=#{width}x#{height}0&sensor=false")
     @.trigger 'wasGrabbed'
 
   drop: ->
@@ -145,11 +166,17 @@ Grabbable = Backbone.Model.extend({
     me.el.removeClass 'grabbed'
     a.entries.reset()
     console.log "you dropped me!: #{me.el.index()}"
-    doDropAnimations()
+    doDropAnimations(me.el)
     @.trigger 'wasDropped'
 
   reset: ->
     me = @.attributes
+    me.el.animate {
+      left: me.x0,
+      top: me.y0,
+      width: me.width0,
+      height: me.height0
+    }, 400
     me.el.removeClass 'not-grabbed'
 
 
@@ -178,7 +205,7 @@ CornerEntry = Grabbable.extend({
     @.updateEl()
     console.log "corner stone..." 
 
-  grab: (hand) ->
+  pushed: (hand) ->
     me = @.attributes
     a.entries.notGrabbed @
     a.lastGrabbed = false
@@ -191,6 +218,33 @@ CornerEntry = Grabbable.extend({
     @.trigger 'wasGrabbed'
 
 })
+
+Drop = Grabbable.extend({
+  initialize: (attrs) ->
+    @.on 'over', @.over
+    @.on 'pushed', @.grab
+    @.on 'pulled', @.grab
+    @.on 'change:x', @.updateX
+    @.on 'change:y', @.updateY
+    @.on 'change:el', @.updateEl
+    @.set {
+      width: attrs.width0
+      height: attrs.height0
+      x: attrs.x0
+      y: attrs.y0
+      el: attrs.el
+    }
+    @.setCorners()
+    @.updateEl()
+    console.log "drop it..." 
+
+  grab: ->
+    @.trigger "wasPushed"
+    a.grabbed.entry?.drop()
+
+})
+
 @Grabbable = Grabbable
+@Drop = Drop 
 @CornerEntry = CornerEntry
 @Entry = Entry
