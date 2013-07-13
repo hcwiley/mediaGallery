@@ -158,14 +158,18 @@
         x: $(window).width() / 4 - $(me).width() / 2,
       }
       a.emailDrop = drop
-      a.emailDrop.on "wasPushed", ->
+      a.emailDrop.on "wasGrabbed", ->
         console.log "do email for:"
         console.log a.grabbed.entry
+        a.socket.emit "email", 
+          email: $(email).val()
+          html: $("#info").html()
     if $(me).attr("id").match("return")
       drop.set {
         x: $(window).width() / 2 - $(me).width() / 2,
       }
       a.returnDrop = drop
+    a.grabbables.add drop
 
 @doGrabAnimations = ($el) ->
   $('#info').animate {
@@ -241,7 +245,7 @@ $(window).ready ->
   $('#signInModal').modal 'show'
   if window.location.hash.match 'skip'
     setTimeout ->
-      $('#email').val('foo@bar.com')
+      $('#email').val('hcwiley@gmail.com')
       setTimeout ->
         $('.submit').trigger 'click'
         setTimeout ->
@@ -250,7 +254,7 @@ $(window).ready ->
       , 200
     , 200
   # set up the socket.io and OSC
-  socket = io.connect "http://localhost" 
+  a.socket = socket = io.connect "http://localhost" 
   osc_client = new OscClient {
     host: "127.0.0.1"
     port: 7654

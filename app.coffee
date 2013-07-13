@@ -10,6 +10,14 @@ osc = require("osc.io")
 mongoose = require("mongoose")
 MongoStore = require("connect-mongo")(express)
 sessionStore = new MongoStore(url: config.mongodb)
+nodemailer = require("nodemailer")
+
+Mailer = nodemailer.createTransport "SMTP",
+  host: "smtp.gmail.com",
+  port: 465,
+  secureConnection: true,
+  auth: { user: config.emailUser, pass: config.emailPW }
+
 
 # connect the database
 mongoose.connect config.mongodb
@@ -21,6 +29,23 @@ io = socketIo.listen(server)
 
 # Make socket.io a little quieter
 io.set "log level", 1
+
+
+io.sockets.on "connection",  (socket) ->
+
+  socket.on "email", (json) ->
+    console.log json
+    opts = 
+      from: config.emailUser,
+      generateTextFromHTML: true
+      to: json.email
+      subject: "barcamp6 kinect+node.js+processing demo"
+      html: json.html
+    Mailer.sendMail opts, (err) ->
+      console.log "sent the mail"
+      if err
+        console.log err
+
 
 # Give socket.io access to the passport user from Express
 #io.set('authorization', passportSocketIo.authorize({

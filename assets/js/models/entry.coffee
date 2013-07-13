@@ -113,15 +113,18 @@ Grabbable = Backbone.Model.extend({
 
   pushed: ->
     me = @.attributes
-    #if a.grabbed
-      #a.grabbed.entry.drop()
+    if a.grabbed
+      a.grabbed.entry.drop()
     #else
+    console.log "pushed generic"
     me.wasPushed = true
 
   pulled: (hand) ->
     me = @.attributes
+    console.log "pulled generic"
     if !a.grabbed && me.wasPushed && a.lastGrabbed != @
       @.grab hand
+    @.trigger 'wasPulled'
 
   grab: (hand) ->
     me = @.attributes
@@ -222,8 +225,9 @@ CornerEntry = Grabbable.extend({
 Drop = Grabbable.extend({
   initialize: (attrs) ->
     @.on 'over', @.over
-    @.on 'pushed', @.grab
-    @.on 'pulled', @.grab
+    @.on 'pushed', @.pushed
+    @.on 'pulled', @.pulled
+    @.on 'grab', @.grab
     @.on 'change:x', @.updateX
     @.on 'change:y', @.updateY
     @.on 'change:el', @.updateEl
@@ -238,8 +242,21 @@ Drop = Grabbable.extend({
     @.updateEl()
     console.log "drop it..." 
 
+  pushed: (hand)->
+    me = @.attributes
+    #else
+    console.log "drop push"
+    me.wasPushed = true
+
+  pulled: (hand) ->
+    me = @.attributes
+    console.log "drop pulled"
+    if me.wasPushed && a.grabbed && me.top < $(window).height()
+      a.grabbed.entry.drop()
+      @.grab()
+
   grab: ->
-    @.trigger "wasPushed"
+    @.trigger "wasGrabbed"
     a.grabbed.entry?.drop()
 
 })

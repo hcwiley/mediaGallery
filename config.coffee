@@ -5,5 +5,7 @@ exports.mongodb = "mongodb://localhost/sb-media"
 exports.sessionSecret = "super duper bowls"
 exports.galleryHost = "127.0.0.1"
 exports.galleryPort = 8000
+exports.emailUser = process.env.EMAIL_USER
+exports.emailPW = process.env.EMAIL_PW
 #exports.galleryHost = "sbm.art72.org"
 #exports.galleryPort = 80
